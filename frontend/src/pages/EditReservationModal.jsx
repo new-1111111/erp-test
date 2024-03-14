@@ -141,7 +141,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
     const [checked, setChecked] = useState(false);
     return (
         <>
-            <Modal title="Edit Reserva" visible={isEditReserva} onCancel={handleBankModal} footer={null} width={1000}>
+            <Modal title="Edit Reserve" visible={isEditReserva} onCancel={handleBankModal} footer={null} width={1000}>
                 <Form
                     className="ant-advanced-search-form"
                     form={_editForm}
@@ -328,6 +328,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
                     />
 
                     <Form.Item
+                        className="mt-5"
                         wrapperCol={{
                             offset: 8,
                             span: 16,
@@ -336,14 +337,14 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
                         <Button type="primary" htmlType="submit">
                             Save
                         </Button>
-
+                        &nbsp;
                         <Button type="ghost" onClick={handleBankModal}>
                             cancel
                         </Button>
                     </Form.Item>
                 </Form>
 
-            </Modal>
+            </Modal >
             <ProductCreationModal thirdParty={true} productInfo={productObj} isModalVisible={isModalVisible} setIsModalVisible={(value) => {
                 setIsModalVisible(value);
                 getProductCategories();

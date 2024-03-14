@@ -1550,6 +1550,7 @@ const PayrollDetails = () => {
           </Form.Item>
           <Table columns={initPeriodsColumn || []} dataSource={periodsData || []} components={components} />
           <Form.Item
+            className='mt-6'
             wrapperCol={{
               offset: 8,
               span: 16,

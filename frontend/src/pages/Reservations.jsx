@@ -1154,6 +1154,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
             </Col>
           </Row>
           <Form.Item
+            className='mt-6'
             wrapperCol={{
               offset: 8,
               span: 16,
@@ -1238,6 +1239,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
             <Input type='number' />
           </Form.Item>
           <Form.Item
+            className='mt-6'
             wrapperCol={{
               offset: 8,
               span: 16,
@@ -1691,6 +1693,7 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
           </Row>
 
           <Form.Item
+            className='mt-6'
             wrapperCol={{
               offset: 8,
               span: 16,
@@ -1699,6 +1702,7 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
             <Button type="primary" htmlType="submit">
               Save
             </Button>
+            &nbsp;
             <Button type="ghost" onClick={() => { handleClose(false) }}>
               cancel
             </Button>
@@ -1775,6 +1779,7 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
             <Input type='number' />
           </Form.Item>
           <Form.Item
+            className='mt-6'
             wrapperCol={{
               offset: 8,
               span: 16,
