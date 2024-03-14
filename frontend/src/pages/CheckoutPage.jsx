@@ -26,6 +26,8 @@ const CheckoutPage = () => {
     const [paymentMethodLists, setPaymentMethodLists] = useState([])
     const [isCashSelected, setIsCashSelected] = useState(false);
     const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState(null);
+    const [clickedIndex, setClickedIndex] = useState(null);
+
     const getProductCategory = async () => {
         const { result } = await request.list({ entity: "productTypes" });
         setProductCategories(result || []);
@@ -34,6 +36,8 @@ const CheckoutPage = () => {
     const getProductLists = async (type_id) => {
         const { result } = await request.listById({ entity: "checkoutProductLists", jsonData: { product_type: type_id } });
         setProductLists(result || [])
+        return result || [];
+
     }
     const getCompanyLists = async (type_id) => {
         const { result } = await request.listById({ entity: "companyList" });
@@ -58,6 +62,7 @@ const CheckoutPage = () => {
         const _categories = await getProductCategory();
         const filterProducts = _.filter(_categories, obj => obj?.company_name?._id === company_id)
         setProductCategories([...filterProducts]);
+        setClickedIndex(company_id)
     }
     const addTaxPercent = useCallback((checked) => {
         setTaxStatus(checked)
@@ -133,11 +138,11 @@ const CheckoutPage = () => {
         setIsCashSelected(false)
     }
     const searchCategories = async (value) => {
-        const _categories = await getProductCategory();
-        if (!value) setProductCategories([..._categories])
+        const _categories = await getProductLists();
+        if (!value) setProductLists([..._categories])
         else {
             const _filtered = _.filter(_categories, obj => { return obj?.product_name.includes(value) });
-            setProductCategories([..._filtered]);
+            setProductLists([..._filtered]);
         }
 
     }
@@ -147,8 +152,13 @@ const CheckoutPage = () => {
             ></PageHeader>
             <Layout className="h-100" style={{ minHight: "0px !important" }}>
                 <div className="d-flex row" style={{ backgroundColor: "#F2F2F2", height: "87%", padding: "18px 18px 18px 28px" }}>
-                    <div style={{ backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "65%" }}>
+                    <div style={{ backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "47%" }}>
+                        <div className="d-flex flex-end w-100 mt-3">
+                            <input placeholder="search products here..." className="border" onChange={(e) => searchCategories(e.target.value)} name="" />
+                            {/* <Button type="primary" shape="circle" icon={<SearchOutlined />} /> */}
+                        </div>
                         <div className="h-25 w-100 overflow-auto row px-4 py-4 flex-start">
+
                             {[...productLists].map((data, index) => {
                                 return <div className="text-center h-50px border border-gray-600 rounded mx-2" key={index} onClick={() => addToOrders(data)} style={{ width: '112px' }}>
                                     <p className="card-title text" style={{
@@ -163,19 +173,16 @@ const CheckoutPage = () => {
                         <div className="h-30 w-100 overflow-auto row px-4 py-4 flex-start align-items-baseline">
                             <div className="d-flex h-30px overflow-scroll w-50" style={{ gap: "31px" }}>
                                 {[...companyLists].map((data, index) => {
-                                    return <div key={index} onClick={() => getProductListsWithCompany(data?._id)}>
+                                    return <div key={index} style={{ cursor: 'pointer', color: clickedIndex === data?._id ? '#1B84FF' : 'black' }} onClick={() => getProductListsWithCompany(data?._id)}>
                                         <span>{data?.company_name}</span>
                                     </div>
                                 })}
                             </div>
-                            <div className="d-flex flex-end w-50">
-                                <input placeholder="Search items here..." className="border" onChange={(e) => searchCategories(e.target.value)} name="" />
-                                <Button type="primary" shape="circle" icon={<SearchOutlined />} />
-                            </div>
+
                         </div>
                         <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-50">
                             {[...productCategories].map((data, index) => {
-                                return <div className="text-center h-50px  border border-gray-600 rounded mx-2" key={index} style={{ width: '112px' }}>
+                                return <div className="text-center  border border-gray-600 rounded mx-2" key={index} style={{ width: '112px' }}>
                                     <p onClick={() => getProductLists(data?._id)} className="card-title text py-4" style={{
                                         fontSize: "14px",
                                         fontFamily: "Inter !important", fontWeight: "600"
@@ -197,7 +204,7 @@ const CheckoutPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div style={{ backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "33%", marginLeft: "20px" }}>
+                    <div style={{ height: 'fit-content', backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "50%", marginLeft: "20px", paddingBottom: "50px" }}>
                         <div className="h-100px overflow-auto">
                             {[...finalOrders].map((data, index) => {
                                 return <>
@@ -250,10 +257,12 @@ const CheckoutPage = () => {
                             }
                         </div>
                         <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                        <div className="d-flex h-50px overflow-scroll w-100 my-3">
+                        <div className="d-flex h-50px w-100 my-3">
                             {[...paymentMethodLists].map((data, index) => {
                                 return (
-                                    <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'])} type="primary" key={index} className={index % 2 == 0 ? "w-auto mx-2 d-inline btn btn-warning" : "w-auto mx-2 d-inline btn btn-primary"}>{data?.method_name}</span>
+                                    <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'])} type="primary" key={index}
+                                        style={{ color: 'white', background: selectedPaymentMethodId === data['_id'] ? '#1B84FF' : 'grey' }}
+                                        className="w-auto mx-2 d-inline btn">{data?.method_name}</span>
                                 );
                             })}
                         </div>
