@@ -16,12 +16,12 @@ const ProductCreationModal = ({ checkout = false, handleUpdatedInfo, productInfo
         setIsModalVisible(false);
     };
     const onFinish = async (values) => {
+        setIsModalVisible(false)
         if (isUpdate && currentId) {
             const id = currentId;
             dispatch(crud.update({ entity, id, jsonData: values }));
         } else {
             const { result } = await request.create({ entity, jsonData: values });
-            console.log(result, `111111111`);
             if (thirdParty) handleUpdatedInfo(result)
             // dispatch(crud.create({ entity, jsonData: values }));
         }

@@ -81,6 +81,7 @@ exports.create = async (Model, req, res) => {
         message: 'Successfully Created the document in Model ',
       });
     } else {
+
       if (req.url.includes(`/client/`)) {
         const existingClient = await Model.findOne({ email: req.body?.email });
         if (existingClient)
@@ -105,6 +106,15 @@ exports.create = async (Model, req, res) => {
             message: 'An account with this Phone already exists.',
           });
 
+      }
+      if (req.url.includes('/productCategories/')) {
+        const existingProduct = await Model.findOne({ category_name: req.body?.category_name });
+        if (existingProduct)
+          return res.status(400).json({
+            success: false,
+            result: null,
+            message: 'An product with this category already exists.',
+          });
       }
       const result = await new Model(req.body).save();
       return res.status(200).json({
