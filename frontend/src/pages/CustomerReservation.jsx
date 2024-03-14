@@ -286,7 +286,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             setCustomerReservation([...items]);
             setPaginations(pagination);
         })()
-    }, []);
+    }, [reserveStatus]);
     const [form] = Form.useForm();
     const [_editForm] = Form.useForm();
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
@@ -459,7 +459,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
 
         <div className="whiteBox shadow">
 
-            <Modal title="New Reserve" visible={isEdit} onCancel={handleBankModal} footer={null} width={1000} >
+            <Modal title="New Reserva" visible={isEdit} onCancel={handleBankModal} footer={null} width={1000} >
                 {
                     !reserveStatus ? <Form
                         className="ant-advanced-search-form"
