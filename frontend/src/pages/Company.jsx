@@ -106,7 +106,7 @@ const Company = () => {
         dispatch(crud.list({ entity }));
       }, 1000)
     } else {
-      message.error("can't remove with invoices")
+      message.error("can't remove with company")
     }
   }
   const columns = [
@@ -217,9 +217,12 @@ const Company = () => {
 
   const { pagination, items } = listResult;
   const [paginations, setPaginations] = useState(pagination)
+  const [detectAction, setdetectAction] = useState(false)
+
 
 
   const onFinish = (values) => {
+    setdetectAction(true)
     const item = dataSource.filter(data => data.email === values.email || data.db_name === values.db_name)
     if (isUpdate && currentId) {
       const id = currentId;
@@ -235,6 +238,8 @@ const Company = () => {
     dispatch(crud.resetState());
     dispatch(crud.list({ entity }));
     handleCancel()
+    setdetectAction(false)
+
   };
   const formRef = useRef(null);
   const onFinishFailed = (errorInfo) => {
@@ -277,7 +282,7 @@ const Company = () => {
       );
     })
     setFilterData(filteredData)
-  }, [searchText, dataSource])
+  }, [searchText, dataSource, detectAction])
 
   const Footer = () => {
     const pages = searchText ? paginations : pagination

@@ -6,11 +6,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { crud } from '@/redux/crud/actions';
 import { selectListItems } from '@/redux/crud/selectors';
 import moment from 'moment';
+import { request } from '@/request';
+
 const CompanyList = () => {
   const entity = "companyList"
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [isModalVisibleDelete, setIsModalVisibleDelete] = useState(false);
+  const { id: currentUserId } = JSON.parse(localStorage.auth)
   const [isUpdate, setIsUpdate] = useState(false);
+  const [deletItem, setDeleteItem] = useState();
   const showModal = () => {
 
     setCurrentId(new Date().valueOf())
@@ -28,6 +32,13 @@ const CompanyList = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  const handleOkDelete = () => {
+    // handle ok button click here
+    setIsModalVisibleDelete(false);
+  };
+  const handleCancelDelete = () => {
+    setIsModalVisibleDelete(false);
+  };
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [currentId, setCurrentId] = useState('');
@@ -44,14 +55,31 @@ const CompanyList = () => {
       setIsUpdate(true);
     }
   }
-  const deleteItem = (item) => {
+  const formRefAdmin = useRef(null);
+  const onFinishAdmin = async (values) => {
+    const entityAdmin = 'admin'
+    const id = currentUserId
+    const userPass = await request.checkPass({ entity: entityAdmin, id, jsonData: values })
+    if (userPass.success) {
+      const id = deletItem._id;
+      dispatch(crud.delete({ entity, id }))
+      setTimeout(() => {
+        dispatch(crud.resetState());
+        dispatch(crud.list({ entity }));
+      }, 1000)
+    }
+    setIsModalVisibleDelete(false);
 
-    // const id = item._id;
-    // dispatch(crud.delete({ entity, id }))
-    // setTimeout(() => {
-    //   dispatch(crud.resetState());
-    //   dispatch(crud.list({ entity }));
-    // }, 1000)
+  };
+  const onFinishFailedAdmin = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+    setIsModalVisibleDelete(false);
+  };
+  const deleteItem = (item) => {
+    setDeleteItem(item)
+    setIsModalVisibleDelete(true);
+
+
   }
   const columns = [
     {
@@ -82,6 +110,56 @@ const CompanyList = () => {
       render: (_, record) => {
         return (
           <>
+            <Modal
+              title='Admin Password'
+              visible={isModalVisibleDelete}
+              onOk={handleOkDelete}
+              onCancel={handleCancelDelete}
+              footer={null}
+            >
+              <Form
+                ref={formRefAdmin}
+                name="basic"
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 16,
+                }}
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={onFinishAdmin}
+                onFinishFailed={onFinishFailedAdmin}
+                autoComplete="off"
+              >
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input type='password' />
+                </Form.Item>
+                <Form.Item
+                  wrapperCol={{
+                    offset: 8,
+                    span: 20,
+                  }}
+                >
+                  <Button type="primary" htmlType="submit">
+                    Delete
+                  </Button>
+                  <Button type="ghost" onClick={handleCancelDelete}>
+                    cancel
+                  </Button>
+                </Form.Item>
+
+              </Form>
+            </Modal>
 
             <Typography.Link onClick={() => editItem(record)}>
               <EditOutlined style={{ fontSize: "20px" }} />

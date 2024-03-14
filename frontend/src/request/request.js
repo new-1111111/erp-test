@@ -48,6 +48,18 @@ const request = {
       return errorHandler(error);
     }
   },
+  checkPass: async ({ entity, id, jsonData }) => {
+    try {
+      const response = await axios.post(entity + '/checkPass/' + id, jsonData);
+      successHandler(response, {
+        notifyOnSuccess: false,
+        notifyOnFailed: true,
+      });
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
   update: async ({ entity, id, jsonData }) => {
     console.log('🚀 ~ file: request.js ~ line 34 ~ update: ~ id', id);
     console.log('🚀 Update Request 🚀 ~ file: request.js ~ line 42 ~ update: ~ jsonData', jsonData);

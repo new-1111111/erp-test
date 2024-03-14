@@ -55,6 +55,7 @@ router
   .route('/admin/create')
   .post([adminPhotoUpload.single('photo'), setFilePathToBody], catchErrors(adminController.create));
 router.route('/admin/read/:id').get(catchErrors(adminController.read));
+router.route('/admin/checkPass/:id').post(catchErrors(adminController.checkPass));
 router.route("/admin/update/:id").patch(catchErrors(adminController.update));
 router.route("/admin/delete/:id").delete(catchErrors(adminController.delete));
 router.route('/admin/search').get(catchErrors(adminController.search));

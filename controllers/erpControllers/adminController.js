@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcryptjs');
 var Admin = mongoose.model('Admin', require('../../models/erpModels/Admin'));
 const getOne = require('../corsControllers/custom').getOne;
 
@@ -204,6 +204,45 @@ exports.read = async (req, res) => {
   }
 };
 
+
+exports.checkPass = async (req, res) => {
+  try {
+    // Find document by id
+    const tmpResult = await Admin.findOne({
+      _id: req?.params?.id,
+      removed: false,
+    });
+
+    const isMatch = await bcrypt.compare(req?.body?.password, tmpResult.password);
+    // If no results found, return document not found
+    if (!isMatch) {
+      return res.status(404).json({
+        success: false,
+        result: null,
+        message: 'Password is incorrect: ' + req.params.id,
+      });
+    } else {
+      // Return success resposne
+      let result = {
+
+      };
+
+      return res.status(200).json({
+        success: true,
+        result,
+        message: 'we found this document by this id: ' + req.params.id,
+      });
+    }
+  } catch (err) {
+    console.log(err, '444');
+    // Server Error
+    return res.status(500).json({
+      success: false,
+      result: null,
+      message: 'Oops there is an Error',
+    });
+  }
+};
 /**
  *  Creates a Single document by giving all necessary req.body fields
  *  @param {object} req.body
@@ -249,6 +288,7 @@ exports.create = async (req, res) => {
     req.body.password = passwordHash;
 
     const result = await new Admin(req.body).save();
+
     if (!result) {
       return res.status(403).json({
         success: false,
