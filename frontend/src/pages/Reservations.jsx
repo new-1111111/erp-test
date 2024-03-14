@@ -432,7 +432,7 @@ const Reservations = () => {
       for (var key in customerIds) {
         const _customer = filteredData.find(item => item?.parent_id?._id === key);
         const _mailArray = customerIds[key]
-        await sendEmailWithCreation(_mailArray, 'to_delivered', _customer?.parent_id)
+        // await sendEmailWithCreation(_mailArray, 'to_delivered', _customer?.parent_id)
       }
       await request.update({ entity, jsonData: { selectedRowKeys, bulk: true, status: 2 } })
       const logData = selectedRowKeys.map(_id => {

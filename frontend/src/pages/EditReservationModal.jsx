@@ -64,7 +64,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
                         mailInfo.push({ ...values, product_info: obj });
                     }
                 }
-                await sendEmailWithCreation(mailInfo, 'active_from_preventa', customerInfo)
+                // await sendEmailWithCreation(mailInfo, 'active_from_preventa', customerInfo)
             }
             dispatch(crud.update({ entity: `customerReversation`, id, jsonData: values }));
             dispatch(crud.listByCustomerContact({ entity: `customerReversation`, jsonData: { parent_id: currentCustomerId } }));
