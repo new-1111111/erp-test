@@ -159,13 +159,16 @@ const CheckoutPage = () => {
                         </div>
                         <div className="h-25 w-100 overflow-auto row px-4 py-4 flex-start">
 
-                            {[...productLists].map((data, index) => {
-                                return <div className="text-center h-50px border border-gray-600 rounded mx-2" key={index} onClick={() => addToOrders(data)} style={{ width: '112px' }}>
+                            {[...productLists].sort((a, b) => a.product_price - b.product_price).map((data, index) => {
+                                return <div className="text-center border border-success rounded mx-2 p-0" key={index} onClick={() => addToOrders(data)} style={{ width: '120px', }}>
                                     <p className="card-title text" style={{
                                         fontSize: "14px",
-                                        fontFamily: "Inter !important", fontWeight: "600"
+                                        fontFamily: "Inter !important", fontWeight: "600",
+                                        padding: "10px "
                                     }}>{data?.product_name}</p>
-                                    <p className="text-success" style={{ fontSize: "14px", fontWeight: "600", fontFamily: "Inter !important" }}>${data?.product_price}</p>
+                                    <div style={{ border: "1px solid #2D2D2D26" }}></div>
+
+                                    <p className="text-success" style={{ padding: "10px", fontSize: "14px", fontWeight: "600", fontFamily: "Inter !important" }}>${data?.product_price}</p>
                                 </div>
                             })}
                         </div>
@@ -270,7 +273,7 @@ const CheckoutPage = () => {
                     </div>
                 </div>
             </Layout>
-        </DashboardLayout>
+        </DashboardLayout >
 
     );
 };
