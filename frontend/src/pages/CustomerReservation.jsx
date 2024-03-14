@@ -6,7 +6,7 @@ import { CheckOutlined, CloseCircleOutlined, DeliveredProcedureOutlined, EditOut
 import { Button, Checkbox, Col, Dropdown, Form, Input, Modal, Pagination, Row, Select, Table, Upload, message } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditReservationModal from "./EditReservationModal";
 import ProductCreationModal from "./ProductCreationModal";
@@ -265,7 +265,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
 
     }
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
     };
     const [paginations, setPaginations] = useState({ current: 0, count: 0, total: 0, page: 0 });
 
@@ -278,7 +277,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 items[i][`reservation_id`] = `R${i + 1}`
                 for (var j = 0; j < result.length; j++) {
                     if (items[i].status === -1 && items[i]._id === result[j].log_id) {
-                        console.log(items[i].status === -1, items[i]._id === result[j].log_id);
                         items[i][`notes`] = result[j][`description`];
                     }
                 }
@@ -311,7 +309,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         setFileList(newFileList);
     };
     const onPreview = async (file) => {
-        console.log(file, `1111`);
         let src = file.url;
         if (!src) {
             src = await new Promise((resolve) => {
@@ -365,7 +362,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 return obj;
             }
         })
-        console.log(productList, `productList`);
         setProductCategories(productList);
         // _editForm.setFieldsValue({ product_name: productList[0]?._id })
     }
@@ -376,7 +372,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             formData['reversations'][index][`prediente`] = (newValue || 0) - (formData['reversations'][index][`paid_amount`] || 0);
             const reversations = formData?.reversations;
 
-            console.log(reversations, '222');
             var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
             for (var i = 0; reversations && i < reversations.length; i++) {
                 var obj = reversations[i];
@@ -424,36 +419,47 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     const paginationChange = useCallback((page) => {
         setPaginations({ ...page, })
     }, [])
-    const inputRef = useRef(null);
     const [imageUrl, setImageUrl] = useState('')
-    const handlePaste = (event) => {
-        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-        setCurrentFile(event.clipboardData.files[0]);
-        for (const item of items) {
-            if (item.type.indexOf('image') !== -1) {
-                const blob = item.getAsFile();
 
-                // You can use the blob data to display the image or upload it to your server
-                // For simplicity, we are displaying the image directly in the browser
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    console.log(e.target)
-                    const imageUrl = e.target.result;
-                    setImageUrl(imageUrl);
-                    // Display the image (you can also upload it to a server at this point)
-                    // inputRef.current.value = imageUrl;
-                };
-                reader.readAsDataURL(blob);
-            }
-        }
+    function loadBlobImageSrc(blob) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (data) => {
+                resolve(data.target.result);
+            };
+            reader.readAsDataURL(blob);
+        });
     }
+
+    document.body.addEventListener("paste", (event) => {
+        const clipboardData = event.clipboardData || event.originalEvent.clipboardData;
+        const imageItem = [...clipboardData.items].find((item) =>
+            item.type.includes("image/")
+        );
+
+        if (!imageItem) {
+            console.log("No image items in clipboard");
+            return;
+        }
+
+        const blob = imageItem.getAsFile();
+
+        if (blob === null) {
+            console.log("Can not get image data from clipboard item");
+            return;
+        }
+
+        loadBlobImageSrc(blob).then((src) => {
+            setImageUrl(src);
+        });
+    });
+
 
     return (
 
         <div className="whiteBox shadow">
 
-            <Modal title="New Reserve" visible={isEdit} onCancel={handleBankModal} footer={null} width={1000}>
+            <Modal title="New Reserve" visible={isEdit} onCancel={handleBankModal} footer={null} width={1000} >
                 {
                     !reserveStatus ? <Form
                         className="ant-advanced-search-form"
@@ -526,16 +532,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                     <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} />
                                 </Form.Item>
                             </Col>
-                            {/* <Col span={4}>
-                            <Upload
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={onChange}
-                                onPreview={onPreview}
-                            >
-                                {fileList.length < 1 && '+ Upload'}
-                            </Upload>
-                        </Col> */}
+
                         </Row>
                         <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
                         <Row>
@@ -672,7 +669,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                         <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
                                         <Row gutter={24} style={{ display: 'flex', justifyContent: 'space-around', width: '80%' }}>
                                             {fields.map(({ key, name, ...restField }, index) => (
-                                                <>
+                                                <React.Fragment key={key}>
                                                     <Col span={6}>
 
                                                         <Form.Item
@@ -699,7 +696,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                                                     validator: ({ field }, paid_amount,) => {
                                                                         const formValues = form.getFieldsValue();
                                                                         const total_price = formValues?.reversations[index]?.total_price;
-                                                                        console.log(typeof total_price, 'total_price,paid_amount', typeof paid_amount);
                                                                         if (parseFloat(paid_amount || 0) > parseFloat(total_price || 0)) {
                                                                             return Promise.reject('Paid amount cannot be greater than total price');
 
@@ -732,14 +728,22 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                                             <label>${form.getFieldsValue()?.reversations && (form.getFieldsValue()?.reversations[index]?.prediente || 0)}</label>
                                                         </Form.Item>
                                                     </Col>
-                                                </>
+                                                </React.Fragment>
                                             ))}
                                         </Row>
                                         <Row style={{ width: `20%`, height: '100%' }}>
-                                            <input style={{ width: '100%' }} type="text" ref={inputRef} placeholder="Click here and Paste" onPaste={handlePaste} />
-                                            <img src={imageUrl} width="100%" height='100%' alt='' />
+                                            {imageUrl == '' ?
+                                                <Upload
+                                                    width="100%" height='100%'
+                                                    listType="picture-card"
+                                                    fileList={fileList}
+                                                    onChange={onChange}
+                                                    onPreview={onPreview}
+                                                >
+                                                    {fileList.length < 1 && '+ Upload'}
+                                                </Upload>
+                                                : <img src={imageUrl} width="70%" height='100%' alt='' />}
                                         </Row>
-                                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
                                     </>
                                 )}
                             </Form.List>
