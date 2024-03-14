@@ -804,7 +804,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                     columns={logColumns}
                     rowClassName="editable-row"
 
-
                 />
             </Modal>
             <Table
@@ -814,7 +813,11 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 dataSource={customerReservation || []}
                 columns={Columns}
                 rowClassName="editable-row"
-                footer={Footer}
+                pagination={{
+                    total: customerReservation.length,
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    defaultPageSize: 10, // Set the default page size
+                }}
                 onChange={paginationChange}
             />
             <EditReservationModal isEditReserva={isEditReserva} setIsEditReserva={(value) => { setIsEditReserva(value) }} customerInfo={customerInfo} currentItem={selectedRecord} currentCustomerId={currentCustomerId} />

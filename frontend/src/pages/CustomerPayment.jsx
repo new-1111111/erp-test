@@ -584,8 +584,12 @@ const CustomerPayment = ({ parentId: currentCustomerId, isClicked, onIsClickNewR
                 dataSource={paymentInfo || []}
                 columns={Columns}
                 rowClassName="editable-row"
-                footer={Footer}
                 onChange={paginationChange}
+                pagination={{
+                    total: paymentInfo.length,
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    defaultPageSize: 10, // Set the default page size
+                }}
             />
         </div>
     );
