@@ -58,8 +58,7 @@ const Admin = () => {
 
   const entity = 'admin'
   const dataTableColumns = [
-    { title: 'First Name', dataIndex: 'name' },
-    { title: 'Last Name', dataIndex: 'surname' },
+    { title: 'Full Name', dataIndex: 'name' },
     { title: 'Email', dataIndex: 'email' },
     {
       title: "Admin", dataIndex: 'is_admin',
@@ -223,19 +222,7 @@ const Admin = () => {
                 <Col span={24}>
                   <Form.Item
                     name="name"
-                    label="First Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    name="surname"
-                    label="Last Name"
+                    label="Full Name"
                     rules={[
                       {
                         required: true,
@@ -284,7 +271,7 @@ const Admin = () => {
                   >
                     <Checkbox defaultChecked={false} />
                   </Form.Item>
-                  {/* <Form.Item
+                  <Form.Item
                     name="role"
                     label="Role"
                     rules={[
@@ -294,7 +281,7 @@ const Admin = () => {
                     ]}
                   >
                     <Select options={userRoles} />
-                  </Form.Item> */}
+                  </Form.Item>
                 </Col>
               </Row>
               <Form.Item

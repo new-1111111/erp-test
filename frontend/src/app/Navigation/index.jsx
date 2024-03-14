@@ -13,7 +13,7 @@ import {
   LoginOutlined,
   CheckOutlined,
 } from '@ant-design/icons';
-const { is_admin: is_admin } = JSON.parse(localStorage.auth)
+
 import history from '@/utils/history';
 
 const { Sider } = Layout;
@@ -24,6 +24,7 @@ export default function Navigation() {
   const { isNavMenuClose } = stateApp;
   const { navMenu } = appContextAction;
   const [showLogoApp, setLogoApp] = useState(isNavMenuClose);
+  const { is_admin: is_admin } = JSON.parse(localStorage?.auth)
   // const userInfo = window.localStorage.auth ? JSON.parse(window.localStorage.auth) : {};
   // console.log(userInfo, 'userInfo');
   useEffect(() => {

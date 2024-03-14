@@ -251,13 +251,6 @@ exports.checkPass = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { db_name } = req.session;
-    if (db_name) {
-      Admin = mongoose.model(`${db_name}_Admin`, mongoose.model("Admin").schema);
-    } else {
-      Admin = mongoose.model(`Admin`, mongoose.model("Admin").schema);
-    }
-
     let { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({
@@ -266,8 +259,7 @@ exports.create = async (req, res) => {
         message: "Email or password fields they don't have been entered.",
       });
 
-    const existingAdmin = await Admin.findOne({ email: email });
-
+    const existingAdmin = await Admin.findOne({ email: email, removed: false });
     if (existingAdmin)
       return res.status(400).json({
         success: false,
@@ -286,9 +278,9 @@ exports.create = async (req, res) => {
 
     const passwordHash = newAdmin.generateHash(password);
     req.body.password = passwordHash;
+    console.log('%ccontrollers\erpControllers\adminController.js:263 req.body', 'color: #007acc;', req.body);
 
     const result = await new Admin(req.body).save();
-
     if (!result) {
       return res.status(403).json({
         success: false,
@@ -460,12 +452,9 @@ exports.delete = async (req, res) => {
       removed: true,
     };
     // Find the document by id and delete it
-    const result = await Admin.findOneAndUpdate(
-      { _id: req.params.id, removed: false },
-      { $set: updates },
-      {
-        new: true, // return the new result instead of the old one
-      }
+    const result = await Admin.deleteOne(
+      // Filter: specify the criteria for the document to delete
+      { _id: req.params.id, removed: false }
     ).exec();
     // If no results found, return document not found
     if (!result) {
