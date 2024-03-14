@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import EditReservationModal from "./EditReservationModal";
 import ProductCreationModal from "./ProductCreationModal";
 import { sendEmailWithCreation } from "./common";
+import PageLoader from '@/components/PageLoader';
+
 const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClickNewReservaChange, customerInfo, setReversationInfo }) => {
     const { id: currentUserId } = JSON.parse(localStorage.auth)
     const entity = 'customerReversation';
@@ -184,6 +186,8 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     const [logHistories, setLogHistories] = useState([]);
     const [customerReservation, setCustomerReservation] = useState([]);
     const [selectedRecord, setSelectedRecord] = useState({});
+
+    const [reserveStatus, setReserveStatus] = useState(false)
     useEffect(() => {
         if (isClicked) editForm();
 
@@ -222,6 +226,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         setIsEditReserva(false)
     }
     const saveData = async (values) => {
+        setReserveStatus(true)
         const parentId = currentCustomerId;
         const { reversations: reservations } = values;
         const reservationsWithParentId = reservations.map((obj) => {
@@ -255,7 +260,9 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         setTimeout(() => {
             dispatch(crud.listByCustomerContact({ entity, jsonData: { parent_id: parentId } }));
             setIsEdit(false)
+            setReserveStatus(false)
         }, 500);
+
     }
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -445,79 +452,81 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     return (
 
         <div className="whiteBox shadow">
-            <Modal title="New Reserva" visible={isEdit} onCancel={handleBankModal} footer={null} width={1000}>
-                <Form
-                    className="ant-advanced-search-form"
-                    form={form}
-                    ref={formRef}
-                    name="basic"
-                    layout="vertical"
-                    wrapperCol={{
-                        span: 16,
-                    }}
-                    onFinish={saveData}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                    initialValues={{
-                        name: parentInfo?.name,
-                        email: parentInfo?.email,
-                        iguser: parentInfo?.iguser
-                    }}
-                >
-                    <Row>
-                        <Col span={6}>
-                            <Form.Item
-                                name={'name'}
-                                label="Name"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input disabled />
-                            </Form.Item>
-                        </Col>
-                        <Col span={6}>
-                            <Form.Item
-                                name={'email'}
-                                label="Email"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input disabled />
-                            </Form.Item>
-                        </Col>
-                        <Col span={6}>
-                            <Form.Item
-                                name={'iguser'}
-                                label="IG"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input disabled />
-                            </Form.Item>
-                        </Col>
-                        <Col span={6}>
-                            <Form.Item
-                                name={'company_name'}
-                                label="Company Name"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} />
-                            </Form.Item>
-                        </Col>
-                        {/* <Col span={4}>
+
+            <Modal title="New Reserve" visible={isEdit} onCancel={handleBankModal} footer={null} width={1000}>
+                {
+                    !reserveStatus ? <Form
+                        className="ant-advanced-search-form"
+                        form={form}
+                        ref={formRef}
+                        name="basic"
+                        layout="vertical"
+                        wrapperCol={{
+                            span: 16,
+                        }}
+                        onFinish={saveData}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                        initialValues={{
+                            name: parentInfo?.name,
+                            email: parentInfo?.email,
+                            iguser: parentInfo?.iguser
+                        }}
+                    >
+                        <Row>
+                            <Col span={6}>
+                                <Form.Item
+                                    name={'name'}
+                                    label="Name"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                >
+                                    <Input disabled />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Form.Item
+                                    name={'email'}
+                                    label="Email"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                >
+                                    <Input disabled />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Form.Item
+                                    name={'iguser'}
+                                    label="IG"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                >
+                                    <Input disabled />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
+                                <Form.Item
+                                    name={'company_name'}
+                                    label="Company Name"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                >
+                                    <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} />
+                                </Form.Item>
+                            </Col>
+                            {/* <Col span={4}>
                             <Upload
                                 listType="picture-card"
                                 fileList={fileList}
@@ -527,251 +536,252 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                 {fileList.length < 1 && '+ Upload'}
                             </Upload>
                         </Col> */}
-                    </Row>
-                    <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
-                    <Row>
-                        <Form.List name="reversations" initialValue={[{}]}>
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, ...restField }, index) => (
-                                        <Row key={key} style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }} >
-                                            <Form.Item
-                                                style={{ width: '20%' }}
-                                                label={!index && `Type`}
-                                                name={[name, `product_type`]}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                    },
-                                                ]}
-                                            >
-                                                <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductType} />
-                                            </Form.Item>
-                                            <Form.Item
-                                                style={{ width: '18%' }}
+                        </Row>
+                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                        <Row>
+                            <Form.List name="reversations" initialValue={[{}]}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map(({ key, name, ...restField }, index) => (
+                                            <Row key={key} style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }} >
+                                                <Form.Item
+                                                    style={{ width: '20%' }}
+                                                    label={!index && `Type`}
+                                                    name={[name, `product_type`]}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                        },
+                                                    ]}
+                                                >
+                                                    <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductType} />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    style={{ width: '18%' }}
 
-                                                {...restField}
-                                                wrapperCol={24}
-                                                name={[name, `product_name`]}
-                                                label={!index && "Product"}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                    },
-                                                ]}
+                                                    {...restField}
+                                                    wrapperCol={24}
+                                                    name={[name, `product_name`]}
+                                                    label={!index && "Product"}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                        },
+                                                    ]}
 
-                                            >
-                                                <Select
-                                                    onSearch={handleSearch}
-                                                    showSearch
-                                                    notFoundContent={<Button type="primary" onClick={(e) => saveCategory(index)}>
-                                                        <CheckOutlined />
-                                                    </Button>}
-                                                    optionFilterProp="children"
-                                                    onChange={(value) => {
-                                                        const { category_name, product_price } = productCategories.find((obj) => {
-                                                            if (obj._id === value) {
-                                                                return obj
+                                                >
+                                                    <Select
+                                                        onSearch={handleSearch}
+                                                        showSearch
+                                                        notFoundContent={<Button type="primary" onClick={(e) => saveCategory(index)}>
+                                                            <CheckOutlined />
+                                                        </Button>}
+                                                        optionFilterProp="children"
+                                                        onChange={(value) => {
+                                                            const { category_name, product_price } = productCategories.find((obj) => {
+                                                                if (obj._id === value) {
+                                                                    return obj
+                                                                }
+                                                            })
+                                                            var formData = form.getFieldsValue();
+                                                            if (formData) {
+                                                                formData['reversations'][index][`payment_name`] = category_name;
+                                                                formData['reversations'][index][`product_price`] = product_price;
+                                                                form.setFieldsValue(formData)
+                                                                handlePriceChange(product_price, index);
+                                                                handlePaidChange(formData['reversations'][index][`paid_amount`], index)
                                                             }
-                                                        })
-                                                        var formData = form.getFieldsValue();
-                                                        if (formData) {
-                                                            formData['reversations'][index][`payment_name`] = category_name;
-                                                            formData['reversations'][index][`product_price`] = product_price;
-                                                            form.setFieldsValue(formData)
-                                                            handlePriceChange(product_price, index);
-                                                            handlePaidChange(formData['reversations'][index][`paid_amount`], index)
-                                                        }
+                                                        }}
+                                                    >
+                                                        {[...productCategories].map((optionField) => (
+                                                            <Select.Option
+                                                                key={optionField[`_id`]}
+                                                                value={optionField[`_id`]}
+                                                            >
+                                                                {optionField[`category_name`]}
+                                                            </Select.Option>
+                                                        ))}
+                                                    </Select>
+
+
+
+                                                </Form.Item>
+                                                <Form.Item
+                                                    style={{ width: '20%' }}
+
+                                                    {...restField}
+                                                    name={[name, `product_price`]}
+                                                    label={!index && "Price"}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                        },
+                                                    ]}
+                                                    onChange={(e) => {
+                                                        const newValue = e.target.value;
+                                                        handlePriceChange(newValue, index)
+
                                                     }}
                                                 >
-                                                    {[...productCategories].map((optionField) => (
-                                                        <Select.Option
-                                                            key={optionField[`_id`]}
-                                                            value={optionField[`_id`]}
-                                                        >
-                                                            {optionField[`category_name`]}
-                                                        </Select.Option>
-                                                    ))}
-                                                </Select>
+                                                    <Input prefix="$" />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    style={{ width: '10%' }}
+                                                    {...restField}
+                                                    name={[name, `is_preventa`]}
+                                                    label={!index && "Preventa"}
+                                                    valuePropName="checked"
+                                                >
+                                                    <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
+                                                </Form.Item>
+                                                <Form.Item
+                                                    style={{ width: '20%' }}
 
+                                                    {...restField}
+                                                    name={[name, `notes`]}
+                                                    label={!index && "Notes"}
+                                                >
+                                                    <Input />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    style={{ width: '10%' }}
 
-
-                                            </Form.Item>
-                                            <Form.Item
-                                                style={{ width: '20%' }}
-
-                                                {...restField}
-                                                name={[name, `product_price`]}
-                                                label={!index && "Price"}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                    },
-                                                ]}
-                                                onChange={(e) => {
-                                                    const newValue = e.target.value;
-                                                    handlePriceChange(newValue, index)
-
-                                                }}
-                                            >
-                                                <Input prefix="$" />
-                                            </Form.Item>
-                                            <Form.Item
-                                                style={{ width: '10%' }}
-                                                {...restField}
-                                                name={[name, `is_preventa`]}
-                                                label={!index && "Preventa"}
-                                                valuePropName="checked"
-                                            >
-                                                <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
-                                            </Form.Item>
-                                            <Form.Item
-                                                style={{ width: '20%' }}
-
-                                                {...restField}
-                                                name={[name, `notes`]}
-                                                label={!index && "Notes"}
-                                            >
-                                                <Input />
-                                            </Form.Item>
-                                            <Form.Item
-                                                style={{ width: '10%' }}
-
-                                                label={!index && `action`}
-                                            >
-                                                <MinusCircleOutlined onClick={() => {
-                                                    remove(name)
-                                                    const formData = form?.getFieldsValue();
-                                                    if (formData) {
-                                                        const reversations = formData?.reversations;
-                                                        var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
-                                                        for (var i = 0; reversations && i < reversations.length; i++) {
-                                                            var obj = reversations[i];
-                                                            total_paid_amount += parseFloat(obj?.paid_amount || 0);
-                                                            total_amount += parseFloat(obj?.total_price || 0);
-                                                            tota_prediente += parseFloat(obj?.prediente || 0)
-                                                        }
-                                                        setTotalPaidAmount(total_paid_amount || 0)
-                                                        setTotalAllAmount(total_amount || 0)
-                                                        setTotalPredienteAmount(tota_prediente || 0)
-                                                    };
-                                                }} />
-                                                <PlusCircleOutlined onClick={() => add()} />
-                                            </Form.Item>
-                                        </Row>
-                                    ))}
-                                    <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
-                                    <Row gutter={24} style={{ display: 'flex', justifyContent: 'space-around', width: '80%' }}>
-                                        {fields.map(({ key, name, ...restField }, index) => (
-                                            <>
-                                                <Col span={6}>
-
-                                                    <Form.Item
-                                                        {...restField}
-                                                        wrapperCol={24}
-                                                        name={[name, 'payment_name']}
-                                                        label={!index && "Product"}
-                                                    >
-                                                        <label>{form?.getFieldsValue()?.reversations && form?.getFieldsValue()?.reversations[index]?.payment_name}</label>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={6}>
-
-                                                    <Form.Item
-                                                        {...restField}
-                                                        name={[name, 'paid_amount']}
-                                                        label={!index && "Paid"}
-                                                        onChange={(e) => {
-                                                            const newValue = e.target.value;
-                                                            handlePaidChange(newValue, index)
-                                                        }}
-                                                        rules={[
-                                                            {
-                                                                validator: ({ field }, paid_amount,) => {
-                                                                    const formValues = form.getFieldsValue();
-                                                                    const total_price = formValues?.reversations[index]?.total_price;
-                                                                    console.log(typeof total_price, 'total_price,paid_amount', typeof paid_amount);
-                                                                    if (parseFloat(paid_amount || 0) > parseFloat(total_price || 0)) {
-                                                                        return Promise.reject('Paid amount cannot be greater than total price');
-
-                                                                    }
-                                                                    return Promise.resolve();
-                                                                },
+                                                    label={!index && `action`}
+                                                >
+                                                    <MinusCircleOutlined onClick={() => {
+                                                        remove(name)
+                                                        const formData = form?.getFieldsValue();
+                                                        if (formData) {
+                                                            const reversations = formData?.reversations;
+                                                            var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
+                                                            for (var i = 0; reversations && i < reversations.length; i++) {
+                                                                var obj = reversations[i];
+                                                                total_paid_amount += parseFloat(obj?.paid_amount || 0);
+                                                                total_amount += parseFloat(obj?.total_price || 0);
+                                                                tota_prediente += parseFloat(obj?.prediente || 0)
                                                             }
-                                                        ]}
-                                                    >
-                                                        <Input />
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={6}>
-
-                                                    <Form.Item
-                                                        {...restField}
-                                                        name={[name, 'total_amount']}
-                                                        label={!index && "Total"}
-                                                    >
-                                                        <label>${form.getFieldsValue()?.reversations && (form.getFieldsValue()?.reversations[index]?.total_price || 0)}</label>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={6}>
-
-                                                    <Form.Item
-                                                        {...restField}
-                                                        name={[name, 'prediente']}
-                                                        label={!index && "Prediente"}
-                                                    >
-                                                        <label>${form.getFieldsValue()?.reversations && (form.getFieldsValue()?.reversations[index]?.prediente || 0)}</label>
-                                                    </Form.Item>
-                                                </Col>
-                                            </>
+                                                            setTotalPaidAmount(total_paid_amount || 0)
+                                                            setTotalAllAmount(total_amount || 0)
+                                                            setTotalPredienteAmount(tota_prediente || 0)
+                                                        };
+                                                    }} />
+                                                    <PlusCircleOutlined onClick={() => add()} />
+                                                </Form.Item>
+                                            </Row>
                                         ))}
-                                    </Row>
-                                    <Row style={{ width: `20%`, height: '100%' }}>
-                                        <input style={{ width: '100%' }} type="text" ref={inputRef} placeholder="Click here and Paste" onPaste={handlePaste} />
-                                        <img src={imageUrl} width="100%" height='100%' alt='' />
-                                    </Row>
-                                    <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
-                                </>
-                            )}
-                        </Form.List>
-                    </Row>
-                    <Row style={{ display: `flex`, justifyContent: 'space-around', width: '80%' }}>
-                        <Col span={6}>
-                            <h3>Total Payment</h3>
-                        </Col>
-                        <Col span={6}>
-                            <h3>${totalPaidAmount}</h3>
-                        </Col>
-                        <Col span={6}>
-                            <h3>${totalAllAmount}</h3>
-                        </Col>
-                        <Col span={6}>
-                            <h3>${totalPredienteAmount}</h3>
-                        </Col>
-                    </Row>
-                    <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
-                    <Form.Item
-                        wrapperCol={{
-                            offset: 8,
-                            span: 16,
-                        }}
-                    >
-                        {
-                            isUpdate ?
-                                <Button type="primary" htmlType="submit">
-                                    Update
-                                </Button>
-                                : <Button type="primary" htmlType="submit">
-                                    Save
-                                </Button>
+                                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                                        <Row gutter={24} style={{ display: 'flex', justifyContent: 'space-around', width: '80%' }}>
+                                            {fields.map(({ key, name, ...restField }, index) => (
+                                                <>
+                                                    <Col span={6}>
 
-                        }
+                                                        <Form.Item
+                                                            {...restField}
+                                                            wrapperCol={24}
+                                                            name={[name, 'payment_name']}
+                                                            label={!index && "Product"}
+                                                        >
+                                                            <label>{form?.getFieldsValue()?.reversations && form?.getFieldsValue()?.reversations[index]?.payment_name}</label>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={6}>
 
-                        <Button type="ghost" onClick={handleBankModal}>
-                            cancel
-                        </Button>
-                    </Form.Item>
-                </Form>
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'paid_amount']}
+                                                            label={!index && "Paid"}
+                                                            onChange={(e) => {
+                                                                const newValue = e.target.value;
+                                                                handlePaidChange(newValue, index)
+                                                            }}
+                                                            rules={[
+                                                                {
+                                                                    validator: ({ field }, paid_amount,) => {
+                                                                        const formValues = form.getFieldsValue();
+                                                                        const total_price = formValues?.reversations[index]?.total_price;
+                                                                        console.log(typeof total_price, 'total_price,paid_amount', typeof paid_amount);
+                                                                        if (parseFloat(paid_amount || 0) > parseFloat(total_price || 0)) {
+                                                                            return Promise.reject('Paid amount cannot be greater than total price');
+
+                                                                        }
+                                                                        return Promise.resolve();
+                                                                    },
+                                                                }
+                                                            ]}
+                                                        >
+                                                            <Input />
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={6}>
+
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'total_amount']}
+                                                            label={!index && "Total"}
+                                                        >
+                                                            <label>${form.getFieldsValue()?.reversations && (form.getFieldsValue()?.reversations[index]?.total_price || 0)}</label>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={6}>
+
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, 'prediente']}
+                                                            label={!index && "Prediente"}
+                                                        >
+                                                            <label>${form.getFieldsValue()?.reversations && (form.getFieldsValue()?.reversations[index]?.prediente || 0)}</label>
+                                                        </Form.Item>
+                                                    </Col>
+                                                </>
+                                            ))}
+                                        </Row>
+                                        <Row style={{ width: `20%`, height: '100%' }}>
+                                            <input style={{ width: '100%' }} type="text" ref={inputRef} placeholder="Click here and Paste" onPaste={handlePaste} />
+                                            <img src={imageUrl} width="100%" height='100%' alt='' />
+                                        </Row>
+                                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Row>
+                        <Row style={{ display: `flex`, justifyContent: 'space-around', width: '80%' }}>
+                            <Col span={6}>
+                                <h3>Total Payment</h3>
+                            </Col>
+                            <Col span={6}>
+                                <h3>${totalPaidAmount}</h3>
+                            </Col>
+                            <Col span={6}>
+                                <h3>${totalAllAmount}</h3>
+                            </Col>
+                            <Col span={6}>
+                                <h3>${totalPredienteAmount}</h3>
+                            </Col>
+                        </Row>
+                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                        <Form.Item
+                            wrapperCol={{
+                                offset: 8,
+                                span: 16,
+                            }}
+                        >
+                            {
+                                isUpdate ?
+                                    <Button type="primary" htmlType="submit">
+                                        Update
+                                    </Button>
+                                    : <Button type="primary" htmlType="submit">
+                                        Save
+                                    </Button>
+
+                            }
+
+                            <Button type="ghost" onClick={handleBankModal}>
+                                cancel
+                            </Button>
+                        </Form.Item>
+                    </Form> : <PageLoader />
+                }
 
             </Modal>
             <Modal title={`Please input your comment before cancel.`} onOk={handleCancel} onCancel={() => setIsCancelModal(false)} visible={isCancelModal}>
