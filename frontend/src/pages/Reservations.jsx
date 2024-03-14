@@ -945,14 +945,14 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                       style={{
                         display: 'flex',
                         justifyContent: `space-around`,
-                        width: '100%'
-                        // marginBottom: 8,
+                        width: '100%',
+
                       }}
                     >
                       <Form.Item
                         {...restField}
                         style={{ width: '20%' }}
-                        label={!index && 'Product Type'}
+                        label={!index ? 'Product Type' : ''}
                         name={[name, `product_type`]}
                         rules={[
                           {
@@ -1058,7 +1058,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                       </Form.Item>
                     </Row>
                   ))}
-                  <div style={{ "backgroundColor": "#13ed05" }} className="opacity-25 rounded h-1px w-100 mb-5 mt-5" a="12312"></div>
+                  <div style={{ "backgroundColor": "rgb(43 43 43)" }} className="opacity-25 rounded h-1px w-100 mb-5 mt-5" a="12312"></div>
                   {/* <div className='border border-dark border-active active border-dashed d-flex pt-5 px-5'> */}
                   <Row style={{
                     display: `flex`,
@@ -1133,7 +1133,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                   }}>
                     <img src={imageUrl} width="100%" height='100%' alt='' />
                   </Row>
-                  <div className="opacity-25 rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                  <div className="opacity-25 rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
                   {/* </div> */}
                 </>
               )}

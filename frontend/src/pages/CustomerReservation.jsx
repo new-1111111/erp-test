@@ -534,7 +534,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                             </Col>
 
                         </Row>
-                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
                         <Row>
                             <Form.List name="reversations" initialValue={[{}]}>
                                 {(fields, { add, remove }) => (
@@ -666,7 +666,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                                 </Form.Item>
                                             </Row>
                                         ))}
-                                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
                                         <Row gutter={24} style={{ display: 'flex', justifyContent: 'space-around', width: '80%' }}>
                                             {fields.map(({ key, name, ...restField }, index) => (
                                                 <React.Fragment key={key}>
@@ -762,7 +762,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                 <h3>${totalPredienteAmount}</h3>
                             </Col>
                         </Row>
-                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "#13ed05" }}></div>
+                        <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
                         <Form.Item
                             wrapperCol={{
                                 offset: 8,
