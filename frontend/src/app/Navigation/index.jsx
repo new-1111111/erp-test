@@ -13,6 +13,7 @@ import {
   LoginOutlined,
   CheckOutlined,
 } from '@ant-design/icons';
+const { is_admin: is_admin } = JSON.parse(localStorage.auth)
 import history from '@/utils/history';
 
 const { Sider } = Layout;
@@ -85,10 +86,10 @@ export default function Navigation() {
               <Link to={'/system_info'} />
               SystemInfo
             </Menu.Item>
-            <Menu.Item key={'Admin'} icon={<TeamOutlined />}>
+            {is_admin ? <Menu.Item key={'Admin'} icon={<TeamOutlined />}>
               <Link to={'/admin'} />
               Users
-            </Menu.Item>
+            </Menu.Item> : null}
             <Menu.Item key={'Reserva Products'} icon={<FundProjectionScreenOutlined />}>
               <Link to={'/product_list'} />
               Reserva Products
@@ -101,10 +102,10 @@ export default function Navigation() {
               <Link to={'/product_types'} />
               Product Types
             </Menu.Item>
-            <Menu.Item key={'company_list'} icon={<FundProjectionScreenOutlined />}>
+            {is_admin ? <Menu.Item key={'company_list'} icon={<FundProjectionScreenOutlined />}>
               <Link to={'/company_list'} />
               Company
-            </Menu.Item>
+            </Menu.Item> : null}
             <Menu.Item key={'Payment Method'} icon={<FundProjectionScreenOutlined />}>
               <Link to={'/payment_method'} />
               Payment Method
