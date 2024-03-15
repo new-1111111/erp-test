@@ -1,5 +1,5 @@
 import { DashboardLayout } from "@/layout";
-import { Layout, PageHeader, Table } from "antd";
+import { Layout, PageHeader, Table, Button } from "antd";
 import { CompanyPicker, YearlyPicker, priceFormat } from "./common";
 import { useCallback, useEffect, useState } from "react";
 import { request } from "@/request";
@@ -106,7 +106,7 @@ const FirstReportView = () => {
     useEffect(() => {
         console.log(initData, 'initDeata');
     }, [initData])
-    const reportColumn = [
+    var reportColumn = [
         {
             title: 'Month',
             dataIndex: 'month_name',
@@ -125,6 +125,29 @@ const FirstReportView = () => {
         });
     }
 
+    const handleClick = (e) => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+        const hours = ('0' + currentDate.getHours()).slice(-2);
+        const minutes = ('0' + currentDate.getMinutes()).slice(-2);
+        const seconds = ('0' + currentDate.getSeconds()).slice(-2);
+        const milliseconds = ('00' + currentDate.getMilliseconds()).slice(-3);
+
+        const fullDateString = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+
+        const table = document.querySelector(".ant-table-content > table");
+        var tableHTML = table.outerHTML;
+        var fileName = `first_report_${fullDateString}.xls`;
+        var a = document.createElement('a');
+        tableHTML = tableHTML.replace(/  /g, '').replace(/ /g, '%20'); // replaces spaces
+        a.href = 'data:application/vnd.ms-excel,' + tableHTML;
+        a.setAttribute('download', fileName);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
     return (
         <DashboardLayout>
             <PageHeader title="Monthly Reports" onBack={() => { window['history'].back() }}
@@ -133,11 +156,13 @@ const FirstReportView = () => {
                 <div className="d-inline">
                     <YearlyPicker onChange={setSelectedYear} />
                     <CompanyPicker onChange={setSelectedCompany} />
+                    <Button id="btnExport" onClick={handleClick}>Export</Button>
                 </div>
-                <div className="d-inline py-6 overflow-scroll h-450px">
+                <div id="dvData" className="d-inline py-6 overflow-scroll h-450px">
                     <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} />
                 </div>
             </Layout>
+
         </DashboardLayout>
     );
 }

@@ -1,5 +1,5 @@
 import { DashboardLayout } from "@/layout";
-import { Layout, PageHeader, Table } from "antd";
+import { Layout, PageHeader, Table, Button } from "antd";
 import { CompanyPicker, MonthlyPicker, YearlyPicker, priceFormat } from "./common";
 import { useCallback, useEffect, useState } from "react";
 import { request } from "@/request";
@@ -21,17 +21,17 @@ const ThirdReportView = () => {
     },
         []);
     const getPaymentObjWithDate = useCallback((date_str, product) => {
-        var amount = 0,count = 0;
+        var amount = 0, count = 0;
         const customisedPaymentInfo = customisePaymentInfos(paymentInfos);
         for (var i = 0; i < customisedPaymentInfo?.length; i++) {
             var obj = customisedPaymentInfo[i];
             const payment_created = moment(new Date(obj?.created)).format('YYYY-MM');
             if (obj?.product_type === product?._id && payment_created === date_str) {
                 amount += parseFloat(obj?.amount) * 1;
-                count ++
+                count++
             }
         }
-        return [amount,count];
+        return [amount, count];
     }, [paymentInfos]);
     const customisePaymentInfos = (_paymentInfos) => {
         var arr = [];
@@ -65,16 +65,16 @@ const ThirdReportView = () => {
     }
     const getTotalAmount = (data) => {
         var amount = 0;
-        for(var i = 0 ; i < 31; i++){
-            const element = data[`month_${i+1}`];
+        for (var i = 0; i < 31; i++) {
+            const element = data[`month_${i + 1}`];
             amount += element || 0;
         }
         return amount;
     }
     const getTotalCount = (data) => {
         var count = 0;
-        for(var i = 0 ; i < 31; i++){
-            const element = data[`month_${i+1}_count`];
+        for (var i = 0; i < 31; i++) {
+            const element = data[`month_${i + 1}_count`];
             count += element || 0;
         }
         return count;
@@ -90,10 +90,10 @@ const ThirdReportView = () => {
                 {
                     title: 'Total',
                     dataIndex: 'total_label',
-                    width:80
+                    width: 80
                 }]
                 for (var i = 0; i < 12; i++) {
-                    var monthLabel = moment().set('months',i).format('MMM');
+                    var monthLabel = moment().set('months', i).format('MMM');
                     _reportColumn.push({
                         title: monthLabel,
                         dataIndex: `month_${i + 1}_count`,
@@ -127,7 +127,7 @@ const ThirdReportView = () => {
                 reportData.push({
                     product_type: "Total",
                     row_id: reportData.length,
-                    total_label: `${_.sumBy(reportData,'total_count')} / $${priceFormat(_.sumBy(reportData, 'total_amount'))}`,
+                    total_label: `${_.sumBy(reportData, 'total_count')} / $${priceFormat(_.sumBy(reportData, 'total_amount'))}`,
                     ..._obj
                 })
                 setInitData(reportData);
@@ -136,6 +136,30 @@ const ThirdReportView = () => {
     }, [
         selectedCompany, getPaymentObjWithDate, selectedYear, paymentInfos, selectedMonth
     ]);
+
+    const handleClick = (e) => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        const day = ('0' + currentDate.getDate()).slice(-2);
+        const hours = ('0' + currentDate.getHours()).slice(-2);
+        const minutes = ('0' + currentDate.getMinutes()).slice(-2);
+        const seconds = ('0' + currentDate.getSeconds()).slice(-2);
+        const milliseconds = ('00' + currentDate.getMilliseconds()).slice(-3);
+
+        const fullDateString = `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+
+        const table = document.querySelector(".ant-table-content > table");
+        var tableHTML = table.outerHTML;
+        var fileName = `third_report_${fullDateString}.xls`;
+        var a = document.createElement('a');
+        tableHTML = tableHTML.replace(/  /g, '').replace(/ /g, '%20'); // replaces spaces
+        a.href = 'data:application/vnd.ms-excel,' + tableHTML;
+        a.setAttribute('download', fileName);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
     return (
         <DashboardLayout>
             <PageHeader title="Monthly Reports" onBack={() => { window['history'].back() }}
@@ -144,6 +168,7 @@ const ThirdReportView = () => {
                 <div className="d-inline">
                     <YearlyPicker onChange={setSelectedYear} />
                     <CompanyPicker onChange={setSelectedCompany} />
+                    <Button id="btnExport" onClick={handleClick}>Export</Button>
                 </div>
                 <div className="d-inline py-6 overflow-scroll h-450px">
                     <Table
