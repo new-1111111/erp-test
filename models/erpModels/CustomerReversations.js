@@ -13,6 +13,12 @@ const CustomerReversationsSchema = new mongoose.Schema({
     required: true,
     autopopulate: true,
   },
+  method: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'PaymentMethod',
+    required: true,
+    autopopulate: true,
+  },
   product_type: {
     type: mongoose.Schema.ObjectId,
     ref: 'ProductTypes',

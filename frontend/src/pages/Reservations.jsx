@@ -33,10 +33,6 @@ const statusArr = [
 ];
 const entity = "customerReversation"
 
-
-
-
-
 const Reservations = () => {
   const searchFields = 'name,email';
   const [status, setStatus] = useState();
@@ -253,6 +249,10 @@ const Reservations = () => {
       }
     },
     {
+      title: 'Method',
+      dataIndex: ['method', 'method_name'],
+    },
+    {
       title: 'Actions',
       render: (_, record) => {
         return (
@@ -310,6 +310,7 @@ const Reservations = () => {
       const { result, pagination } = await request.list({ entity });
       setPaginations(pagination);
       setInitItems(result);
+
     })()
     document.title = "Reservations";
   }, []);
@@ -572,10 +573,15 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
   const [totalAllAmount, setTotalAllAmount] = useState(0);
   const [totalPredienteAmount, setTotalPredienteAmount] = useState(0);
   const [currentIndex, setCurrentIndex] = useState();
+  const [paymentMethodLists, setPaymentMethodLists] = useState([])
+  const [reservationMethod, setReservationMethod] = useState('')
   const history = useHistory();
+  const getPaymentLists = async () => {
+    const { result } = await request.listById({ entity: "paymentMethod" });
+    setPaymentMethodLists(result || [])
+  }
   const saveData = (values) => {
 
-    console.log(values, 'values', selectedCustomerId);
     if (selectedCustomerId) {
       const parentId = selectedCustomerId;
       const { reversations } = values;
@@ -583,7 +589,8 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
         obj.parent_id = parentId;
         obj.user_id = currentUserId;
         obj.is_preventa = obj.is_preventa || false;
-        obj.company_name = values?.company_name
+        obj.company_name = values?.company_name;
+        obj.method = reservationMethod;
         return obj
       })
       const formData = new FormData();
@@ -674,6 +681,8 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
       console.log(filteredObj);
       _form.setFieldsValue({ email: filteredObj?.email, iguser: filteredObj?.iguser, phone: filteredObj?.phone, customer_name: filteredObj?.name, customer_id: filteredObj?._id })
     }
+    getPaymentLists()
+
   }, [customerData, updateCustomerInfo, selectedCustomerId, _form]);
 
   const handleProductChange = (value) => {
@@ -708,7 +717,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
     console.log(formData, 'formData');
     if (formData) {
       formData['reversations'][index][`prediente`] = formData['reversations'][index][`product_price`] - newValue;
-
+      setReservationMethod(formData['reversations'][index][`method`])
       const reversations = formData[`reversations`];
       var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
       for (var i = 0; reversations && i < reversations.length; i++) {
@@ -951,7 +960,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                     >
                       <Form.Item
                         {...restField}
-                        style={{ width: '20%' }}
+                        style={{ width: '19%' }}
                         label={!index ? 'Product Type' : ''}
                         name={[name, `product_type`]}
                         rules={[
@@ -964,7 +973,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        style={{ width: '20%' }}
+                        style={{ width: '15%' }}
                         wrapperCol={24}
                         name={[name, `product_name`]}
                         label={!index && "Product"}
@@ -1002,7 +1011,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                         {...restField}
                         name={[name, `product_price`]}
                         label={!index && "Price"}
-                        style={{ width: '20%' }}
+                        style={{ width: '15%' }}
                         rules={[
                           {
                             required: true,
@@ -1026,11 +1035,23 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        style={{ width: '18%' }}
+                        style={{ width: '15%' }}
                         name={[name, `notes`]}
                         label={!index && "Notes"}
                       >
                         <Input />
+                      </Form.Item>
+                      <Form.Item name={[name, `method`]} style={{ width: '15%' }} label={!index && "Methods"}>
+                        <Select
+                        >
+                          {[...paymentMethodLists].map((data) => {
+                            return (
+                              <Select.Option
+                                value={data?._id}
+                              >{data?.method_name} </Select.Option>
+                            );
+                          })}
+                        </Select>
                       </Form.Item>
                       <Form.Item
                         label={!index && `action`}
@@ -1153,6 +1174,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
               <h3>${totalPredienteAmount}</h3>
             </Col>
           </Row>
+
           <Form.Item
             className='mt-6'
             wrapperCol={{
@@ -1341,6 +1363,7 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
   }
   const [selectedCustomerId, setSelectedCustomerId] = useState();
   const [productList, setProductList] = useState([]);
+
   const [reservations, setReservations] = useState([]);
   const [paymentHistories, setPaymentHistories] = useState([])
   const getPaymentHistories = async (customer_id) => {
@@ -1574,10 +1597,11 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
                 </Select>
               </Form.Item>
             </Col>
+
             {productList.map((obj, name) => (
               <>
                 <Row style={{ display: 'flex', justifyContent: "space-around", width: '80%' }}>
-                  <Col span={6}>
+                  <Col span={4}>
                     <Form.Item
                       wrapperCol={24}
                       name={[name, 'payment_name']}
@@ -1586,7 +1610,7 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
                       <label>{obj?.product_name?.category_name}</label>
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  <Col span={4}>
                     <Form.Item
                       name={[name, 'paid_amount']}
                       label={!name && "Paid"}
@@ -1662,6 +1686,21 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
                     >
                       <Input value={obj?._id} />
                     </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      name={[name, 'method']}
+                      label={!name && "Method"}
+                    >
+                      <label>{obj?.method?.method_name}</label>
+                    </Form.Item>
+                    {/* <Form.Item
+                      name={[name, '_id']}
+                      style={{ display: `none` }}
+                      initialValue={obj?._id}
+                    >
+                      <Input value={obj?._id} />
+                    </Form.Item> */}
                   </Col>
                   {
                     productList.length === name + 1 && (
