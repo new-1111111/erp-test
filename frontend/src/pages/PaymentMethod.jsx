@@ -190,6 +190,17 @@ const PaymentMethod = () => {
                                 <Input />
                             </Form.Item>
                             <Form.Item
+                                name="method_description"
+                                label="Method Description"
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
                                 wrapperCol={{
                                     offset: 8,
                                     span: 16,

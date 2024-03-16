@@ -6,6 +6,9 @@ const paymentMethodSchema = new mongoose.Schema({
   method_name: {
     type: String,
   },
+  method_description: {
+    type: String,
+  },
   removed: {
     type: Boolean,
     default: false,

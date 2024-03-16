@@ -27,6 +27,7 @@ const CheckoutPage = () => {
     const [isCashSelected, setIsCashSelected] = useState(false);
     const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState(null);
     const [clickedIndex, setClickedIndex] = useState(null);
+    const [methodDescription, setMethodDescription] = useState(null);
 
     const getProductCategory = async () => {
         const { result } = await request.list({ entity: "productTypes" });
@@ -108,9 +109,11 @@ const CheckoutPage = () => {
         socket.emit('checkoutData', { checkout: sortedData, user_id: userId(), sub_total: priceFormat(total_price), tax_value: taxPrice, total_price: totalPriceWithTax, isCash: isCashSelected });
     }, [orderLists, taxStatus, addTaxPercent, taxPrice, isCashSelected]);
     const handlePaymentMethod = (value) => {
+        console.log(value)
         if (value) {
             const methodName = value.split(".")[0]
             const methodId = value.split(".")[1]
+            setMethodDescription(value.split(".")[2])
             setSelectedPaymentMethodId(methodId);
             if (methodName.toLowerCase() === 'cash') {
                 setIsCashSelected(true);
@@ -136,6 +139,7 @@ const CheckoutPage = () => {
         setTotalOrderPrice(0);
         setTotalPriceWithTax(0);
         setIsCashSelected(false)
+        setMethodDescription('')
     }
     const searchCategories = async (value) => {
         const _categories = await getProductLists();
@@ -183,7 +187,7 @@ const CheckoutPage = () => {
                             </div>
 
                         </div>
-                        <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-50">
+                        <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
                             {[...productCategories].map((data, index) => {
                                 return <div className="text-center  border border-gray-600 rounded mx-2" key={index} style={{ width: '112px' }}>
                                     <p onClick={() => getProductLists(data?._id)} className="card-title text py-4" style={{
@@ -192,6 +196,9 @@ const CheckoutPage = () => {
                                     }}>{data?.product_name}</p>
                                 </div>
                             })}
+                        </div>
+                        <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
+                            {methodDescription}
                         </div>
                         <div style={{ border: "1px solid #2D2D2D26" }}></div>
                         <div className="row my-5">
@@ -263,7 +270,7 @@ const CheckoutPage = () => {
                         <div className="d-flex h-50px w-100 my-3">
                             {[...paymentMethodLists].map((data, index) => {
                                 return (
-                                    <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'])} type="primary" key={index}
+                                    <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'] + "." + data['method_description'])} type="primary" key={index}
                                         style={{ color: 'white', background: selectedPaymentMethodId === data['_id'] ? '#1B84FF' : 'grey' }}
                                         className="w-auto mx-2 d-inline btn">{data?.method_name}</span>
                                 );
