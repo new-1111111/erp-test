@@ -66,6 +66,9 @@ const PaymentManagement = () => {
   const [currentId, setCurrentId] = useState('');
   const [filterData, setFilterData] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const { company_id: company_id } = JSON.parse(localStorage?.auth)
+  const { is_admin: is_admin } = JSON.parse(localStorage?.auth)
+  const [showTable, setShowTable] = useState(false)
 
   const isEditing = (record) => record._id === editingKey;
   const columns = [
@@ -117,7 +120,9 @@ const PaymentManagement = () => {
             <Typography.Link onClick={() => viewPaymentDetails(record)}>
               <EyeOutlined style={{ fontSize: "15px" }} />
             </Typography.Link>
-            {record?.status === 1 &&
+            {console.log('%cfrontend\src\pages\PaymentManagement.jsx:121 record', 'color: #007acc;', record)}
+
+            {is_admin == true || company_id == record?.user_id?.company_id &&
               <Popconfirm title="Sure to Cancelled?" onConfirm={() => cancelPayment(record)}>
                 <CloseOutlined style={{ fontSize: "15px" }} />
               </Popconfirm>
@@ -152,12 +157,14 @@ const PaymentManagement = () => {
   const { pagination, items } = Items;
   const [paginations, setPaginations] = useState(pagination)
   useEffect(() => {
+
     dispatch(crud.resetState());
     dispatch(crud.list({ entity }));
     document.title = "Payments"
   }, [dispatch]);
 
   useEffect(() => {
+
     (async () => {
       const { result } = await request.list({ entity: `logHistory` });
       for (var i = 0; i < items.length; i++) {
@@ -175,6 +182,7 @@ const PaymentManagement = () => {
     })()
   }, [items])
   useEffect(() => {
+
     if (periods) {
       const [startDate, endDate] = periods
       const format = 'MM-DD-YYYY';
