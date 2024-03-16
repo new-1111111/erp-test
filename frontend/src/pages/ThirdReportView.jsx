@@ -13,6 +13,9 @@ const ThirdReportView = () => {
     const [paymentInfos, setPaymentInfos] = useState([]);
     const [initData, setInitData] = useState([]);
     const [reportColumn, setReportColumn] = useState([]);
+    const [showTable, setShowTable] = useState(false)
+    const { is_admin: is_admin } = JSON.parse(localStorage?.auth)
+    const { company_id: company_id } = JSON.parse(localStorage?.auth)
     useEffect(() => {
         (async () => {
             const { result } = await request.list({ entity: 'paymentHistory' });
@@ -80,6 +83,10 @@ const ThirdReportView = () => {
         return count;
     }
     useEffect(() => {
+        setShowTable(false)
+        if (is_admin == true || company_id == selectedCompany?._id) {
+            setShowTable(true)
+        }
         if (selectedCompany && selectedYear) {
             (async () => {
                 const _reportColumn = [{
@@ -171,14 +178,9 @@ const ThirdReportView = () => {
                     <Button id="btnExport" onClick={handleClick}>Export</Button>
                 </div>
                 <div className="d-inline py-6 overflow-scroll h-450px">
-                    <Table
-                        scroll={{
-                            x: 2000,
-                        }}
-                        columns={reportColumn}
-                        dataSource={initData}
-                        rowKey={(item) => item.row_id}
-                        pagination={false} />
+                    {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} /> : <>You can't access this company's data</>}
+
+
                 </div>
             </Layout>
         </DashboardLayout>

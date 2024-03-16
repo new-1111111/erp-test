@@ -11,13 +11,16 @@ const FirstReportView = () => {
     const [selectedYear, setSelectedYear] = useState();
     const [paymentInfos, setPaymentInfos] = useState([]);
     const [initData, setInitData] = useState([])
+    const [showTable, setShowTable] = useState(false)
+    const { is_admin: is_admin } = JSON.parse(localStorage?.auth)
+    const { company_id: company_id } = JSON.parse(localStorage?.auth)
     useEffect(() => {
         (async () => {
             const { result } = await request.list({ entity: 'paymentHistory' });
             setPaymentInfos(result);
         })()
-    }, [
-    ]);
+    },
+        []);
     const getPaymentObjWithDate = useCallback((date_str, selectedCompany) => {
         var amount = 0;
         const customisedPaymentInfo = customisePaymentInfos(paymentInfos)
@@ -73,6 +76,10 @@ const FirstReportView = () => {
         return amount;
     }
     useEffect(() => {
+        setShowTable(false)
+        if (is_admin == true || company_id == selectedCompany?._id) {
+            setShowTable(true)
+        }
         if (selectedCompany && selectedYear) {
             console.log(paymentInfos, 'paymentInfos')
             var obj = {}, reportData = [];
@@ -103,9 +110,6 @@ const FirstReportView = () => {
     }, [
         selectedCompany, getPaymentObjWithDate, selectedYear, paymentInfos
     ]);
-    useEffect(() => {
-        console.log(initData, 'initDeata');
-    }, [initData])
     var reportColumn = [
         {
             title: 'Month',
@@ -159,7 +163,8 @@ const FirstReportView = () => {
                     <Button id="btnExport" onClick={handleClick}>Export</Button>
                 </div>
                 <div id="dvData" className="d-inline py-6 overflow-scroll h-450px">
-                    <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} />
+                    {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} /> : <>You can't access this company's data</>}
+
                 </div>
             </Layout>
 

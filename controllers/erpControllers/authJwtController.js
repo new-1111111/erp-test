@@ -89,7 +89,8 @@ exports.login = async (req, res) => {
           role: result.role,
           is_admin: result.is_admin,
           isLoggedIn: result.isLoggedIn,
-          company: false
+          company: false,
+          company_id: result.company_id,
         },
       },
       message: 'Successfully login admin',

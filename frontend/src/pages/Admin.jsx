@@ -14,6 +14,8 @@ import { request } from '@/request';
 import { useSelector } from 'react-redux';
 import { selectListItems } from '@/redux/crud/selectors';
 import useOnFetch from '@/hooks/useOnFetch';
+import { CompanyPicker } from "./common";
+
 const userRoles = [
   {
     label: "Super Admin",
@@ -55,6 +57,7 @@ const Admin = () => {
   const formRef = useRef(null);
   const { onFetch, result, isLoading, isSuccess } = useOnFetch();
   const [paginations, setPaginations] = useState([])
+  const [selectedCompany, setSelectedCompany] = useState();
 
   const entity = 'admin'
   const dataTableColumns = [
@@ -108,6 +111,8 @@ const Admin = () => {
   };
   const onFinish = (values) => {
     if (!values['is_admin']) values['is_admin'] = false;
+    values['company_id'] = values['company']?._id;
+    console.log('%cfrontend\src\pages\Admin.jsx:114 values', 'color: #007acc;', values);
     if (isUpdate && currentId) {
       const id = currentId;
       dispatch(crud.update({ entity, id, jsonData: values }));
@@ -274,13 +279,19 @@ const Admin = () => {
                   <Form.Item
                     name="role"
                     label="Role"
+                  >
+                    <Select options={userRoles} />
+                  </Form.Item>
+                  <Form.Item
+                    name="company"
+                    label="Company"
                     rules={[
                       {
                         required: true,
                       },
                     ]}
                   >
-                    <Select options={userRoles} />
+                    <CompanyPicker onChange={setSelectedCompany} />
                   </Form.Item>
                 </Col>
               </Row>

@@ -12,7 +12,7 @@ const clientSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  company: {
+  company_id: {
     type: String,
     trim: true,
     // required: true,

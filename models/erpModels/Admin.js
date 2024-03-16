@@ -35,7 +35,9 @@ const adminSchema = new Schema({
   role: {
     type: Number,
   },
-
+  company_id: {
+    type: String
+  },
   hasCustomPermissions: {
     type: Boolean,
     default: false,

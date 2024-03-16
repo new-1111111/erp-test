@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom/cjs/react-router-dom';
 import { request } from '@/request';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import moment from 'moment';
+import { CompanyPicker } from "./common";
 const Customers = () => {
   const entity = "client"
   const searchFields = 'name,email';
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [selectedCompany, setSelectedCompany] = useState();
 
 
   const history = useHistory();
@@ -141,6 +143,7 @@ const Customers = () => {
 
 
   const onFinish = async (values) => {
+    values['company_id'] = values['company']?._id;
     if (isUpdate && currentId) {
       const id = currentId;
       dispatch(crud.update({ entity, id, jsonData: { ...values } }));
@@ -287,6 +290,17 @@ const Customers = () => {
                 ]}
               >
                 <Input type='number' />
+              </Form.Item>
+              <Form.Item
+                name="company"
+                label="Company"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <CompanyPicker onChange={setSelectedCompany} />
               </Form.Item>
               <Form.Item
                 wrapperCol={{
