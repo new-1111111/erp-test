@@ -344,7 +344,6 @@ exports._upload = async (Model, req, res) => {
 exports.reservationUpload = async (Model, req, res) => {
   try {
     // Creating a new document in the collection
-    console.log('%ccontrollers\corsControllers\apiRest.js:347 req.body', 'color: #007acc;', req.body);
     const bulkData = JSON.parse(req.body.bulkData);
     const newData = bulkData.map(obj => { return { ...obj, filename: req?.file?.filename } });
     var maxInfo = null, fieldId = null;

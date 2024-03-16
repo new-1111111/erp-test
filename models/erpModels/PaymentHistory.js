@@ -80,7 +80,9 @@ const PaymentHistorySchema = new mongoose.Schema({
     count: {
       type: Number
     },
-
+    product_description: {
+      type: String
+    },
   }],
   status: {
     type: Number,

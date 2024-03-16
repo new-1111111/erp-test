@@ -28,6 +28,12 @@ const CheckoutPage = () => {
     const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState(null);
     const [clickedIndex, setClickedIndex] = useState(null);
     const [methodDescription, setMethodDescription] = useState(null);
+    const [primaryCompany, setPrimaryCompany] = useState(false);
+    const [companyName, setCompanyName] = useState('');
+    const [productName, setProductName] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [orderItem, setOrderItem] = useState('');
+    const [productDescription, setProductDescription] = useState('');
 
     const getProductCategory = async () => {
         const { result } = await request.list({ entity: "productTypes" });
@@ -49,7 +55,14 @@ const CheckoutPage = () => {
         setPaymentMethodLists(result || [])
     }
     const addToOrders = async (item) => {
-        setOrderLists([...orderLists, item]);
+        if (primaryCompany) {
+            setProductName(item.product_name)
+            setIsModalOpen(true)
+            setOrderItem(item)
+        } else {
+            setOrderLists([...orderLists, item]);
+        }
+
     }
     const _minusToOrders = async (id) => {
         const index = _.findIndex(orderLists, (obj) => obj._id === id);
@@ -58,8 +71,9 @@ const CheckoutPage = () => {
         }
         setOrderLists([...orderLists]);
     }
-    const getProductListsWithCompany = async (company_id) => {
-        console.log(productCategories, 'productCategories');
+    const getProductListsWithCompany = async (company_id, primary, company_name) => {
+        setPrimaryCompany(primary)
+        setCompanyName(company_name)
         const _categories = await getProductCategory();
         const filterProducts = _.filter(_categories, obj => obj?.company_name?._id === company_id)
         setProductCategories([...filterProducts]);
@@ -97,7 +111,8 @@ const CheckoutPage = () => {
             const product_price = priceFormat(priceFormat(groupedOrders[key][0]?.product_price) * count);
             total_price += parseFloat(product_price);
             const product_name = (groupedOrders[key][0]?.product_name)
-            data.push({ _id: key, count, product_price, product_name })
+            const product_description = (groupedOrders[key][0]?.description)
+            data.push({ _id: key, count, product_price, product_name, product_description })
         }
         const sortedData = _.sortBy([...data], 'product_name');
         setTotalOrderPrice(priceFormat(total_price));
@@ -133,6 +148,7 @@ const CheckoutPage = () => {
             user_id: userId(),
             checkout: true,
         }]);
+        console.log('%cfrontend\src\pages\CheckoutPage.jsx:150 finalOrders', 'color: #007acc;', finalOrders);
         await request.upload({ entity: 'paymentHistory', jsonData: { bulkData } });
         setFinalOrders([]);
         setOrderLists([])
@@ -150,138 +166,161 @@ const CheckoutPage = () => {
         }
 
     }
+    const finishDescription = () => {
+        orderItem.description = productDescription;
+        setOrderLists([...orderLists, orderItem]);
+        setProductDescription('');
+        setIsModalOpen(false);
+    }
     return (
-        <DashboardLayout>
-            <PageHeader title="Payments" onBack={() => { window['history'].back() }}
-            ></PageHeader>
-            <Layout className="h-100" style={{ minHight: "0px !important" }}>
-                <div className="d-flex row" style={{ backgroundColor: "#F2F2F2", height: "87%", padding: "18px 18px 18px 28px" }}>
-                    <div style={{ backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "47%" }}>
-                        <div className="d-flex flex-end w-100 mt-3">
-                            <input placeholder="search products here..." className="border" onChange={(e) => searchCategories(e.target.value)} name="" />
-                            {/* <Button type="primary" shape="circle" icon={<SearchOutlined />} /> */}
-                        </div>
-                        <div className="h-25 w-100 overflow-auto row px-4 py-4 flex-start">
+        <>
+            <Modal
+                title={'Please enter Product Details'}
+                visible={isModalOpen}
+                onOk={() => setIsModalOpen(true)}
+                onCancel={() => setIsModalOpen(false)}
+                footer={null}
+            >
+                <div className=' mt-1'>Product : {productName}</div>
+                <div className=' mt-1'>Company : {companyName}</div>
+                <div className=' mt-8'>Description</div>
+                <Input type='text' value={productDescription} onChange={(e) => setProductDescription(e.target.value)}></Input>
+                <Button onClick={finishDescription} type="primary" className="w-100 btn-color-info mt-3">Guardar</Button>
 
-                            {[...productLists].sort((a, b) => a.product_price - b.product_price).map((data, index) => {
-                                return <div className="text-center border border-success rounded mx-2 p-0" key={index} onClick={() => addToOrders(data)} style={{ width: '120px', }}>
-                                    <p className="card-title text" style={{
-                                        fontSize: "14px",
-                                        fontFamily: "Inter !important", fontWeight: "600",
-                                        padding: "10px "
-                                    }}>{data?.product_name}</p>
-                                    <div style={{ border: "1px solid #2D2D2D26" }}></div>
+            </Modal>
+            <DashboardLayout>
 
-                                    <p className="text-success" style={{ padding: "10px", fontSize: "14px", fontWeight: "600", fontFamily: "Inter !important" }}>${data?.product_price}</p>
-                                </div>
-                            })}
-                        </div>
-                        <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                        <div className="h-30 w-100 overflow-auto row px-4 py-4 flex-start align-items-baseline">
-                            <div className="d-flex h-30px overflow-scroll w-50" style={{ gap: "31px" }}>
-                                {[...companyLists].map((data, index) => {
-                                    return <div key={index} style={{ cursor: 'pointer', color: clickedIndex === data?._id ? '#1B84FF' : 'black' }} onClick={() => getProductListsWithCompany(data?._id)}>
-                                        <span>{data?.company_name}</span>
+                <PageHeader title="Payments" onBack={() => { window['history'].back() }}
+                ></PageHeader>
+                <Layout className="h-100" style={{ minHight: "0px !important" }}>
+                    <div className="d-flex row" style={{ backgroundColor: "#F2F2F2", height: "87%", padding: "18px 18px 18px 28px" }}>
+                        <div style={{ backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "47%" }}>
+                            <div className="d-flex flex-end w-100 mt-3">
+                                <input placeholder="search products here..." className="border" onChange={(e) => searchCategories(e.target.value)} name="" />
+                                {/* <Button type="primary" shape="circle" icon={<SearchOutlined />} /> */}
+                            </div>
+                            <div className="h-25 w-100 overflow-auto row px-4 py-4 flex-start">
+
+                                {[...productLists].sort((a, b) => a.product_price - b.product_price).map((data, index) => {
+                                    return <div className="text-center border border-success rounded mx-2 p-0" key={index} onClick={() => addToOrders(data)} style={{ width: '120px', }}>
+                                        <p className="card-title text" style={{
+                                            fontSize: "14px",
+                                            fontFamily: "Inter !important", fontWeight: "600",
+                                            padding: "10px "
+                                        }}>{data?.product_name}</p>
+                                        <div style={{ border: "1px solid #2D2D2D26" }}></div>
+
+                                        <p className="text-success" style={{ padding: "10px", fontSize: "14px", fontWeight: "600", fontFamily: "Inter !important" }}>${data?.product_price}</p>
                                     </div>
                                 })}
                             </div>
+                            <div style={{ border: "1px solid #2D2D2D26" }}></div>
+                            <div className="h-30 w-100 overflow-auto row px-4 py-4 flex-start align-items-baseline">
+                                <div className="d-flex h-30px overflow-scroll w-50" style={{ gap: "31px" }}>
+                                    {[...companyLists].map((data, index) => {
+                                        return <div key={index} style={{ cursor: 'pointer', color: clickedIndex === data?._id ? '#1B84FF' : 'black' }} onClick={() => getProductListsWithCompany(data?._id, data?.primary, data?.company_name)}>
+                                            <span>{data?.company_name}</span>
+                                        </div>
+                                    })}
+                                </div>
 
-                        </div>
-                        <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
-                            {[...productCategories].map((data, index) => {
-                                return <div className="text-center  border border-gray-600 rounded mx-2" key={index} style={{ width: '112px' }}>
-                                    <p onClick={() => getProductLists(data?._id)} className="card-title text py-4" style={{
-                                        fontSize: "14px",
-                                        fontFamily: "Inter !important", fontWeight: "600"
-                                    }}>{data?.product_name}</p>
-                                </div>
-                            })}
-                        </div>
-                        <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
-                            {methodDescription}
-                        </div>
-                        <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                        <div className="row my-5">
-                            <div className="col-6">
-                                <Button type="primary" size={'small'}>
-                                    SCAN BARCODE
-                                </Button>
                             </div>
-                            <div className="col-6 justify-content-end d-flex">
-                                <Button onClick={() => { history.push('/payments') }} icon={<LogoutOutlined className="position-relative" style={{ top: "-2px" }} />} type="primary" size={'small'} danger>
-                                    EXIT
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                    <div style={{ height: 'fit-content', backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "50%", marginLeft: "20px", paddingBottom: "50px" }}>
-                        <div className="h-100px overflow-auto">
-                            {[...finalOrders].map((data, index) => {
-                                return <>
-                                    <div className='d-flex justify-content-sm-between mx-2 my-5'>
-                                        <span key={index}>
-                                            <MinusOutlined key={index} className="mx-2" onClick={() => _minusToOrders(data?._id)} />
-                                            {data?.product_name} x {data?.count}
-                                        </span>
-                                        <span>${data?.product_price}</span>
+                            <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
+                                {[...productCategories].map((data, index) => {
+                                    return <div className="text-center  border border-gray-600 rounded mx-2" key={index} style={{ width: '112px' }}>
+                                        <p onClick={() => getProductLists(data?._id)} className="card-title text py-4" style={{
+                                            fontSize: "14px",
+                                            fontFamily: "Inter !important", fontWeight: "600"
+                                        }}>{data?.product_name}</p>
                                     </div>
-                                </>
-                            })}
+                                })}
+                            </div>
+                            <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
+                                {methodDescription}
+                            </div>
+                            <div style={{ border: "1px solid #2D2D2D26" }}></div>
+                            <div className="row my-5">
+                                <div className="col-6">
+                                    <Button type="primary" size={'small'}>
+                                        SCAN BARCODE
+                                    </Button>
+                                </div>
+                                <div className="col-6 justify-content-end d-flex">
+                                    <Button onClick={() => { history.push('/payments') }} icon={<LogoutOutlined className="position-relative" style={{ top: "-2px" }} />} type="primary" size={'small'} danger>
+                                        EXIT
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                        <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                        <div className="h-50 my-7">
-                            <div className="d-flex my-7">
-                                <div className="col-6 mx-5">
-                                    <h6 className="text-success">Sub Total <Checkbox onChange={(e) => addTaxPercent(e.target.checked)}>Tax</Checkbox></h6>
-                                </div>
-                                <div className="col-6 flex-end">
-                                    <h6 className="text-success"> ${totalOrderPrice}</h6>
-                                </div>
+                        <div style={{ height: 'fit-content', backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "50%", marginLeft: "20px", paddingBottom: "50px" }}>
+                            <div className="h-100px overflow-auto">
+                                {[...finalOrders].map((data, index) => {
+                                    return <>
+                                        <div className='d-flex justify-content-sm-between mx-2 my-5'>
+                                            <span key={index}>
+                                                <MinusOutlined key={index} className="mx-2" onClick={() => _minusToOrders(data?._id)} />
+                                                {data?.product_name} x {data?.count}
+                                            </span>
+                                            <span>${data?.product_price}</span>
+                                        </div>
+                                    </>
+                                })}
                             </div>
-                            <div className="d-flex my-7">
-                                <div className="col-6 mx-5">
-                                    <h6>Taxes</h6>
-                                </div>
-                                <div className="col-6 flex-end">
-                                    <h6> ${taxPrice}</h6>
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <div className="col-6 mx-5">
-                                    <h3>Total</h3>
-                                </div>
-                                <div className="col-6 flex-end">
-                                    <h3 className='text'> ${isCashSelected ? parseFloat(totalPriceWithTax) + 5 : totalPriceWithTax || 0}</h3>
-                                </div>
-                            </div>
-                            {
-                                isCashSelected &&
-                                <div className="d-flex">
+                            <div style={{ border: "1px solid #2D2D2D26" }}></div>
+                            <div className="h-50 my-7">
+                                <div className="d-flex my-7">
                                     <div className="col-6 mx-5">
-                                        <h3>Exchange</h3>
+                                        <h6 className="text-success">Sub Total <Checkbox onChange={(e) => addTaxPercent(e.target.checked)}>Tax</Checkbox></h6>
                                     </div>
                                     <div className="col-6 flex-end">
-                                        <h3 className='text'> ${5}</h3>
+                                        <h6 className="text-success"> ${totalOrderPrice}</h6>
                                     </div>
                                 </div>
-                            }
+                                <div className="d-flex my-7">
+                                    <div className="col-6 mx-5">
+                                        <h6>Taxes</h6>
+                                    </div>
+                                    <div className="col-6 flex-end">
+                                        <h6> ${taxPrice}</h6>
+                                    </div>
+                                </div>
+                                <div className="d-flex">
+                                    <div className="col-6 mx-5">
+                                        <h3>Total</h3>
+                                    </div>
+                                    <div className="col-6 flex-end">
+                                        <h3 className='text'> ${isCashSelected ? parseFloat(totalPriceWithTax) + 5 : totalPriceWithTax || 0}</h3>
+                                    </div>
+                                </div>
+                                {
+                                    isCashSelected &&
+                                    <div className="d-flex">
+                                        <div className="col-6 mx-5">
+                                            <h3>Exchange</h3>
+                                        </div>
+                                        <div className="col-6 flex-end">
+                                            <h3 className='text'> ${5}</h3>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div style={{ border: "1px solid #2D2D2D26" }}></div>
+                            <div className="d-flex h-50px w-100 my-3">
+                                {[...paymentMethodLists].map((data, index) => {
+                                    return (
+                                        <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'] + "." + data['method_description'])} type="primary" key={index}
+                                            style={{ color: 'white', background: selectedPaymentMethodId === data['_id'] ? '#1B84FF' : 'grey' }}
+                                            className="w-auto mx-2 d-inline btn">{data?.method_name}</span>
+                                    );
+                                })}
+                            </div>
+                            <Button onClick={finishCheckout} type="primary" className="w-100 btn-color-info">SAVE</Button>
                         </div>
-                        <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                        <div className="d-flex h-50px w-100 my-3">
-                            {[...paymentMethodLists].map((data, index) => {
-                                return (
-                                    <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'] + "." + data['method_description'])} type="primary" key={index}
-                                        style={{ color: 'white', background: selectedPaymentMethodId === data['_id'] ? '#1B84FF' : 'grey' }}
-                                        className="w-auto mx-2 d-inline btn">{data?.method_name}</span>
-                                );
-                            })}
-                        </div>
-                        <Button onClick={finishCheckout} type="primary" className="w-100 btn-color-info">SAVE</Button>
                     </div>
-                </div>
-            </Layout>
-        </DashboardLayout >
+                </Layout>
 
+            </DashboardLayout >
+        </>
     );
 };
 export default CheckoutPage
