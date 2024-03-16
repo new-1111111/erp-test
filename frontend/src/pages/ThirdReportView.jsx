@@ -179,8 +179,6 @@ const ThirdReportView = () => {
                 </div>
                 <div className="d-inline py-6 overflow-scroll h-450px">
                     {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} /> : <>You can't access this company's data</>}
-
-
                 </div>
             </Layout>
         </DashboardLayout>
