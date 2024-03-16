@@ -49,6 +49,8 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
     const [productObj, setProductObj] = useState(false);
     const [isPreventa, setIsPreventa] = useState(false);
     const [_editForm] = useForm();
+    const [emailFooter, setEmailFooter] = useState('')
+
     const handleBankModal = () => {
         setIsEditReserva(false)
     }
@@ -64,7 +66,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
                         mailInfo.push({ ...values, product_info: obj });
                     }
                 }
-                // await sendEmailWithCreation(mailInfo, 'active_from_preventa', customerInfo)
+                // await sendEmailWithCreation(mailInfo, 'active_from_preventa', customerInfo,emailFooter)
             }
             dispatch(crud.update({ entity: `customerReversation`, id, jsonData: values }));
             dispatch(crud.listByCustomerContact({ entity: `customerReversation`, jsonData: { parent_id: currentCustomerId } }));
@@ -112,6 +114,8 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
     }
     useEffect(() => {
         (async () => {
+            const { result } = await request.list({ entity: 'systemInfo' });
+            setEmailFooter(result[0].email_footer)
             console.log(currentItem, `1currentItem`);
             getPaymentHistories(currentItem)
             await getProductCategories();

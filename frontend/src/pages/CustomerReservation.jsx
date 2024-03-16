@@ -188,12 +188,14 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     const [selectedRecord, setSelectedRecord] = useState({});
 
     const [reserveStatus, setReserveStatus] = useState(false)
+    const [emailFooter, setEmailFooter] = useState('')
     useEffect(() => {
         if (isClicked) editForm();
 
         (async () => {
             const { result: companyInfo } = await request.list({ entity: 'companyList' });
             form.setFieldsValue({ company_name: companyInfo[0]?._id })
+
         })()
 
         setParentInfo(customerInfo);
@@ -254,8 +256,8 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 activeMailInfo.push(obj);
             }
         }
-        // preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo);
-        // activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo);
+        // preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo , emailFooter);
+        // activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo, emailFooter);
         dispatch(crud.upload({ entity, jsonData: formData }));
         setTimeout(() => {
             dispatch(crud.listByCustomerContact({ entity, jsonData: { parent_id: parentId } }));
@@ -349,7 +351,10 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     }
 
 
-    useEffect(() => {
+    useEffect(async () => {
+        const { result } = await request.list({ entity: 'systemInfo' });
+        setEmailFooter(result[0].email_footer)
+
         const id = currentCustomerId;
         const jsonData = { parent_id: id }
         dispatch(crud.listByCustomerContact({ entity, jsonData }));

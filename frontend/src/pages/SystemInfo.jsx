@@ -12,6 +12,8 @@ const SystemInfo = () => {
     const dispatch = useDispatch();
     const [isUpdate, setIsUpdate] = useState(false);
     const [currentId, setCurrentId] = useState(false);
+    const { is_admin: is_admin } = JSON.parse(localStorage?.auth)
+
     // To disable submit button at the beginning.
     useEffect(() => {
         (async () => {
@@ -77,6 +79,13 @@ const SystemInfo = () => {
                             >
                                 <Input />
                             </Form.Item>
+                            {!is_admin ? <Form.Item
+                                name={'email_footer'}
+                                label="Email Footer"
+                            >
+                                <Input />
+                            </Form.Item> : null}
+
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" className="w-25 login-form-button">
                                     {isUpdate ? "Update" : "Save"}

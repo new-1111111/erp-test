@@ -114,7 +114,7 @@ export async function primaryCompanyInfo() {
     const { result } = await request.listById({ entity: 'companyList', jsonData: { primary: true } });
     return result[0];
 }
-export async function sendEmailWithCreation(data, type, customerInfo) {
+export async function sendEmailWithCreation(data, type, customerInfo, emailFooter) {
     console.log(customerInfo, 'customerInfo');
     var subject = "Confirmación de Reserva ⭐";
     let text = '';
@@ -144,8 +144,7 @@ export async function sendEmailWithCreation(data, type, customerInfo) {
         text += `Usted cuenta con 60 días para retirar el producto. Cuando realice el pago restante <br />
                  podrá retirar el producto en <a href="https://www.mundoeli.com/contacto/">nuestra tienda física</a> o coordinar un servicio de envío.<br />
                 Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
-                Atentamente,<br />
-                El mundo de Eli`
+                ${emailFooter}`
     } else if (type === 'preventa') {
         var proudct_tds = '';
         for (var i = 0; i < data.length; i++) {
@@ -172,8 +171,7 @@ export async function sendEmailWithCreation(data, type, customerInfo) {
         text += `Cuando el producto esté en la tienda te notificaremos por esta vía para que puedas <br />
                  retirar el producto en <a href="https://www.mundoeli.com/contacto/">nuestra tienda física</a> o coordinar un servicio de envío.<br />
                 Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
-                Atentamente,<br />
-                El mundo de Eli`
+               ${emailFooter}`
     } else if (type === 'active_from_preventa') {
         subject = "Producto listo para retirar 😜";
         var proudct_tds = '';
@@ -201,8 +199,7 @@ export async function sendEmailWithCreation(data, type, customerInfo) {
         text += `Usted cuenta con 60 días para retirar el producto. Cuando realice el pago restante <br />
                  podrá retirar el producto en <a href="https://www.mundoeli.com/contacto/" target="_blank">nuestra tienda física</a> o coordinar un servicio de envío.<br />
                 Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
-                Atentamente,<br />
-                El mundo de Eli`
+                ${emailFooter}`
     } else if (type === 'to_delivered') {
         subject = "Pedido completado 😃";
         var proudct_tds = '';
@@ -229,8 +226,7 @@ export async function sendEmailWithCreation(data, type, customerInfo) {
                 </tbody>
             </table>`
         text += `Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
-                Atentamente,<br />
-                El mundo de Eli`
+           ${emailFooter}`
     }
     const result = await axios.post(EMAIL_SERVER, {
         subject, text, to: customerInfo?.email

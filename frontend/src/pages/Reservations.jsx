@@ -40,6 +40,7 @@ const Reservations = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [searchText, setSearchText] = useState('');
 
+  const [emailFooter, setEmailFooter] = useState('')
   const dispatch = useDispatch();
 
 
@@ -305,13 +306,15 @@ const Reservations = () => {
     "pages": 3,
     "count": 23
   })
-  useEffect(() => {
-    (async () => {
-      const { result, pagination } = await request.list({ entity });
-      setPaginations(pagination);
-      setInitItems(result);
+  useEffect(async () => {
+    const { result } = await request.list({ entity: 'systemInfo' });
+    setEmailFooter(result[0].email_footer)
+      (async () => {
+        const { result, pagination } = await request.list({ entity });
+        setPaginations(pagination);
+        setInitItems(result);
 
-    })()
+      })()
     document.title = "Reservations";
   }, []);
 
@@ -433,7 +436,7 @@ const Reservations = () => {
       for (var key in customerIds) {
         const _customer = filteredData.find(item => item?.parent_id?._id === key);
         const _mailArray = customerIds[key]
-        // await sendEmailWithCreation(_mailArray, 'to_delivered', _customer?.parent_id)
+        // await sendEmailWithCreation(_mailArray, 'to_delivered', _customer?.parent_id , emailFooter)
       }
       await request.update({ entity, jsonData: { selectedRowKeys, bulk: true, status: 2 } })
       const logData = selectedRowKeys.map(_id => {

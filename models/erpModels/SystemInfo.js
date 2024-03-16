@@ -27,6 +27,9 @@ const systemInfoSchema = new mongoose.Schema({
     smtp_pass: {
         type: String
     },
+    email_footer: {
+        type: String
+    },
     created: {
         type: Date,
         default: Date.now,
