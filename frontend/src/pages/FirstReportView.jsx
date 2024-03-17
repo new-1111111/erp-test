@@ -128,6 +128,10 @@ const FirstReportView = () => {
             dataIndex: `day_${i + 1}`
         });
     }
+    const paginationConfig = {
+        pageSize: 100,
+        showSizeChanger: true,
+    };
 
     const handleClick = (e) => {
         const currentDate = new Date();
@@ -163,7 +167,7 @@ const FirstReportView = () => {
                     <Button id="btnExport" onClick={handleClick}>Export</Button>
                 </div>
                 <div id="dvData" className="d-inline py-6 overflow-scroll h-450px">
-                    {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} /> : <>You can't access this company's data</>}
+                    {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={paginationConfig} /> : <>You can't access this company's data</>}
 
                 </div>
             </Layout>

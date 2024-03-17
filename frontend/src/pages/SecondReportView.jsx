@@ -91,19 +91,21 @@ const SecondReportView = () => {
             (async () => {
                 const monthCount = moment().set('year', selectedYear).set('month', selectedMonth).daysInMonth()
                 const _reportColumn = [{
-                    title: 'Product Type ',
+                    title: 'ProductType',
                     dataIndex: 'product_type',
-                    width: 120,
+                    width: 200
+
                 },
                 {
                     title: 'Total',
                     dataIndex: 'total_label',
+                    width: 200
                 }]
                 for (var i = 0; i < monthCount; i++) {
                     _reportColumn.push({
                         title: i + 1,
                         dataIndex: `day_${i + 1}_count`,
-                        width: 60
+                        width: 20
                     });
                 }
                 setReportColumn(_reportColumn);
@@ -142,7 +144,10 @@ const SecondReportView = () => {
     }, [
         selectedCompany, getPaymentObjWithDate, selectedYear, paymentInfos, selectedMonth
     ]);
-
+    const paginationConfig = {
+        pageSize: 100,
+        showSizeChanger: true,
+    };
     const handleClick = (e) => {
         const currentDate = new Date();
         const year = currentDate.getFullYear();
@@ -178,7 +183,7 @@ const SecondReportView = () => {
                     <Button id="btnExport" onClick={handleClick}>Export</Button>
                 </div>
                 <div className="d-inline py-6 overflow-scroll h-450px">
-                    {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={false} /> : <>You can't access this company's data</>}
+                    {showTable ? <Table columns={reportColumn} dataSource={initData} rowKey={(item) => item.row_id} pagination={paginationConfig} /> : <>You can't access this company's data</>}
                 </div>
             </Layout>
         </DashboardLayout>

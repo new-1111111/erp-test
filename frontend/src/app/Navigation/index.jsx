@@ -69,6 +69,10 @@ export default function Navigation() {
             Payments
           </Menu.Item>
           <SubMenu key={'Reports'} icon={<SettingOutlined />} title={'Reports'}>
+            <Menu.Item key={"PaymentReport"} icon={<SettingOutlined />}>
+              <Link to={'/payment_report'} />
+              PaymentReport
+            </Menu.Item>
             <Menu.Item key={"Report1"} icon={<SettingOutlined />}>
               <Link to={'/report1'} />
               Report1

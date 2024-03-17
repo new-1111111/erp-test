@@ -70,6 +70,43 @@ export function MonthlyPicker({ onChange }) {
         </div>
     );
 }
+
+
+export function WeeklyPicker({ onChange, selectedYear }) {
+    const [defaultWeek, setDefaultWeek] = useState(moment().week());
+    const [defaultYear, setDefaultYear] = useState(moment().year());
+    const [changedWeek, setChangedWeek] = useState('');
+    useEffect(() => {
+        if (selectedYear) {
+            setDefaultYear(selectedYear);
+        }
+    }, [selectedYear]);
+
+    const nextHandle = () => {
+        const nextWeek = defaultWeek === moment().weeksInYear() ? 1 : defaultWeek + 1;
+        setDefaultWeek(nextWeek);
+    }
+
+    const prevHandle = () => {
+        const prevWeek = defaultWeek === 1 ? moment().weeksInYear() : defaultWeek - 1;
+        setDefaultWeek(prevWeek);
+    }
+
+    useEffect(() => {
+        const startDate = moment().year(defaultYear).week(defaultWeek).startOf('week');
+        const endDate = moment().year(defaultYear).week(defaultWeek).endOf('week');
+        setChangedWeek(`Week-${startDate.week()}  (${startDate.format('MMM Do')} - ${endDate.format('MMM Do, YYYY')})  `);
+        if (onChange) onChange(defaultWeek, defaultYear);
+    }, [defaultWeek, defaultYear, onChange]);
+
+    return (
+        <div className="d-inline px-5">
+            <CaretLeftOutlined onClick={prevHandle} />
+            <span className="text text-black px-2">{changedWeek}</span>
+            <CaretRightOutlined onClick={nextHandle} />
+        </div>
+    );
+}
 export function CompanyPicker({ onChange = false }) {
     const [companyList, setCompanyList] = useState([]);
     const [initIndex, setInitIndex] = useState(0);

@@ -144,6 +144,10 @@ var routes = [
     component: 'PaymentMethod',
   },
   {
+    path: '/payment_report',
+    component: 'PaymentReport',
+  },
+  {
     path: '/report1',
     component: 'FirstReportView',
   },

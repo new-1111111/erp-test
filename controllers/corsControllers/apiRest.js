@@ -510,7 +510,7 @@ exports.list = async (Model, req, res, modelName) => {
 
 exports.getByParentId = async (Model, req, res) => {
   const queryObj = req.body;
-
+  console.log('%ccontrollers\corsControllers\apiRest.js:513 queryObj', 'color: #007acc;', queryObj);
   const page = req.query.page || 1;
   const limit = parseInt(req.query.items) || 10;
   const skip = page * limit - limit;
