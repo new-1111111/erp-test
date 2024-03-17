@@ -256,8 +256,8 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 activeMailInfo.push(obj);
             }
         }
-        // preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo , emailFooter);
-        // activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo, emailFooter);
+        preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo, emailFooter);
+        activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo, emailFooter);
         dispatch(crud.upload({ entity, jsonData: formData }));
         setTimeout(() => {
             dispatch(crud.listByCustomerContact({ entity, jsonData: { parent_id: parentId } }));

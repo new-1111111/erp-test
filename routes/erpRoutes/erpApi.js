@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
+const nodemailer = require("nodemailer");
 
 const path = require('path');
 const setFilePathToBody = require('@/middlewares/setFilePathToBody');
@@ -47,6 +48,31 @@ var document = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
+router
+  .route('/send-email')
+  .post(async (req, res) => {
+    const mailOptions = {
+      from: "eli@mundoeli.com",
+      to: req.body.to,
+      subject: req.body.subject,
+      text: req.body.text,
+    };
+    const transporter = nodemailer.createTransport({
+      host: "server012.leo.com.pa",
+      port: 587,
+      auth: {
+        user: "eli@mundoeli.com",
+        pass: "Oes23w%56",
+      },
+    });
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).send("Email sent");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).send("Error sending email");
+    }
+  });
 const documentUpload = multer({ storage: document });
 const adminPhotoUpload = multer({ storage: adminPhotoStorage });
 const _upload = multer({ dest: 'public/uploads/user/' });

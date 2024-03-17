@@ -1,4 +1,3 @@
-import { EMAIL_SERVER } from "@/config/serverApiConfig";
 import { request } from "@/request";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -265,7 +264,7 @@ export async function sendEmailWithCreation(data, type, customerInfo, emailFoote
         text += `Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
            ${emailFooter}`
     }
-    const result = await axios.post(EMAIL_SERVER, {
+    const result = await axios.post('/send-email', {
         subject, text, to: customerInfo?.email
     }, {
         withCredentials: true

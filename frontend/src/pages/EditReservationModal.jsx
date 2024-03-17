@@ -58,6 +58,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
         const id = currentId;
         if (currentId) {
             console.log(currentId, values, customerInfo, 'currentId');
+            console.log(isPreventa, !values?.is_preventa);
             if (isPreventa && !values?.is_preventa) {
                 const mailInfo = [];
                 for (var i = 0; i < productCategories.length; i++) {
@@ -66,7 +67,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
                         mailInfo.push({ ...values, product_info: obj });
                     }
                 }
-                // await sendEmailWithCreation(mailInfo, 'active_from_preventa', customerInfo,emailFooter)
+                await sendEmailWithCreation(mailInfo, 'active_from_preventa', customerInfo, emailFooter)
             }
             dispatch(crud.update({ entity: `customerReversation`, id, jsonData: values }));
             dispatch(crud.listByCustomerContact({ entity: `customerReversation`, jsonData: { parent_id: currentCustomerId } }));

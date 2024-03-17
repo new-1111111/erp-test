@@ -4,7 +4,6 @@ export const ACCESS_TOKEN_NAME = 'x-auth-token';
 export const UPLOAD_URL = 'http://localhost:8888/uploads/reservation/'
 export const Avatar_url = 'http://localhost:8888/uploads/reservation/'
 export const BASE_URL = 'http://localhost:8888';
-export const EMAIL_SERVER = 'https://mn5cdr-4000.csb.app/send-email'
 // export const API_BASE_URL = `https://eli.mundoeli.com/api/`
 // export const DOWNLOAD_BASE_URL = `https://eli.mundoeli.com//download/`
 // export const ACCESS_TOKEN_NAME = 'x-auth-token';

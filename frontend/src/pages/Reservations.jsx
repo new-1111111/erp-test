@@ -309,12 +309,13 @@ const Reservations = () => {
   useEffect(async () => {
     const { result } = await request.list({ entity: 'systemInfo' });
     setEmailFooter(result[0].email_footer)
-      (async () => {
-        const { result, pagination } = await request.list({ entity });
-        setPaginations(pagination);
-        setInitItems(result);
+    console.log('%cfrontend\src\pages\Reservations.jsx:311 emailFooter', 'color: #007acc;', emailFooter);
+    (async () => {
+      const { result, pagination } = await request.list({ entity });
+      setPaginations(pagination);
+      setInitItems(result);
 
-      })()
+    })()
     document.title = "Reservations";
   }, []);
 
@@ -436,7 +437,7 @@ const Reservations = () => {
       for (var key in customerIds) {
         const _customer = filteredData.find(item => item?.parent_id?._id === key);
         const _mailArray = customerIds[key]
-        // await sendEmailWithCreation(_mailArray, 'to_delivered', _customer?.parent_id , emailFooter)
+        await sendEmailWithCreation(_mailArray, 'to_delivered', _customer?.parent_id, emailFooter)
       }
       await request.update({ entity, jsonData: { selectedRowKeys, bulk: true, status: 2 } })
       const logData = selectedRowKeys.map(_id => {
