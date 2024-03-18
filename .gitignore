@@ -8,9 +8,6 @@ notes.md
 public/uploads/
 yarn.lock
 frontends/erpFrontend/src/config
-server.js
-app.js
 frontends/erpFrontend/src/config/serverApiConfig.js
 .env
-./server.js
-server.js
+
