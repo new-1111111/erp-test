@@ -276,12 +276,7 @@ const Admin = () => {
                   >
                     <Checkbox defaultChecked={false} />
                   </Form.Item>
-                  <Form.Item
-                    name="role"
-                    label="Role"
-                  >
-                    <Select options={userRoles} />
-                  </Form.Item>
+
                   <Form.Item
                     name="company"
                     label="Company"
