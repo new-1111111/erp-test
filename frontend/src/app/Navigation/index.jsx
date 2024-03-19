@@ -12,6 +12,8 @@ import {
   ControlOutlined,
   LoginOutlined,
   CheckOutlined,
+  UserOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 
 import history from '@/utils/history';
@@ -116,9 +118,15 @@ export default function Navigation() {
               Payment Method
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key={`SignOut`} icon={<LoginOutlined />} onClick={() => history.push('/logout')}>
-            Sign Out
-          </Menu.Item>
+          <SubMenu key={'Profile'} icon={<UserOutlined />} title={'Profile'}>
+            <Menu.Item key={`Edit`} icon={<EditOutlined />} onClick={() => history.push('/user_edit')}>
+              Edit
+            </Menu.Item>
+            <Menu.Item key={`SignOut`} icon={<LoginOutlined />} onClick={() => history.push('/logout')}>
+              Sign Out
+            </Menu.Item>
+
+          </SubMenu>
         </Menu>
       </Sider>
     </>

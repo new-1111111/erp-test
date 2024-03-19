@@ -197,7 +197,7 @@ const Admin = () => {
   const onFinishFailed = () => { }
   return (
     <DashboardLayout>
-      <PageHeader title="Payments" onBack={() => { window['history'].back() }}
+      <PageHeader title="Users" onBack={() => { window['history'].back() }}
         extra={
           <Button onClick={showModal} type="primary">Create user</Button>
         }

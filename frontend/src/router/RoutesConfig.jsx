@@ -8,6 +8,10 @@ var routes = [
     component: 'Customer',
   },
   {
+    path: '/user_edit',
+    component: 'UserEdit',
+  },
+  {
     path: '/customer',
     component: 'Customer',
   },
