@@ -79,7 +79,7 @@ const SystemInfo = () => {
                             >
                                 <Input />
                             </Form.Item>
-                            {!is_admin ? <Form.Item
+                            {is_admin ? <Form.Item
                                 name={'email_footer'}
                                 label="Email Footer"
                             >

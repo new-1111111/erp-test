@@ -311,7 +311,7 @@ const Reservations = () => {
   })
   useEffect(async () => {
     const { result } = await request.list({ entity: 'systemInfo' });
-    setEmailFooter(result[0].email_footer)
+    setEmailFooter(result[0]?.email_footer)
     console.log('%cfrontend\src\pages\Reservations.jsx:311 emailFooter', 'color: #007acc;', emailFooter);
     (async () => {
       const { result, pagination } = await request.list({ entity });

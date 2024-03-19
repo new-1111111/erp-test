@@ -116,8 +116,7 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
     useEffect(() => {
         (async () => {
             const { result } = await request.list({ entity: 'systemInfo' });
-            setEmailFooter(result[0].email_footer)
-            console.log(currentItem, `1currentItem`);
+            setEmailFooter(result[0]?.email_footer)
             getPaymentHistories(currentItem)
             await getProductCategories();
             setCurrentId(currentItem?._id);
