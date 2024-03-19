@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'frontends/erpFrontend/build')));
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 
 
 // // Sessions allow us to Contact data on visitors from request to request
@@ -99,7 +99,7 @@ app.use(
 
 app.get('*', (req, res) => {
   console.log(req.url)
-  res.sendFile(path.join(__dirname, 'frontends/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
 });
 
 
