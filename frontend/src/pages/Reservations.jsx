@@ -168,6 +168,9 @@ const Reservations = () => {
   const [filterData, setFilterData] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [detectData, setDetectData] = useState(false);
+
+
   const onSelectChange = (newSelectedRowKeys) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -331,12 +334,11 @@ const Reservations = () => {
       //     }
       //   }
       // }
-      console.log(_initItems, '_initItems');
       setFilterData(_initItems)
       setDataSource(_initItems);
 
     })()
-  }, [initItems])
+  }, [initItems, detectData])
   useEffect(() => {
     const filteredData = dataSource.filter((record) => {
 
@@ -368,7 +370,9 @@ const Reservations = () => {
       </>
     );
   }
-
+  const handleDetectDataChange = (newDetectData) => {
+    setDetectData(newDetectData);
+  };
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
   const handleCloseFunc = (value) => {
@@ -529,7 +533,8 @@ const Reservations = () => {
             />
           </Form>
 
-          <NewReservationModal isVisit={isOpen} handleClose={handleCloseFunc} currentFile={currentFile} imageUrl={imageUrl} />
+          <NewReservationModal isVisit={isOpen} handleClose={handleCloseFunc} currentFile={currentFile} imageUrl={imageUrl}
+            onDetectDataChange={handleDetectDataChange} />
           <Modal title={`Log History`} footer={null} onCancel={() => setIsLogHistory(false)} visible={isLogHistory}>
             <Table
               bordered
@@ -561,7 +566,7 @@ const Reservations = () => {
 };
 export default Reservations;
 
-const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) => {
+const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDetectDataChange }) => {
   const dispatch = useDispatch();
   const [_form] = useForm();
   const [customerForm] = useForm();
@@ -579,13 +584,14 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
   const [currentIndex, setCurrentIndex] = useState();
   const [paymentMethodLists, setPaymentMethodLists] = useState([])
   const [reservationMethod, setReservationMethod] = useState('')
+
   const history = useHistory();
   const getPaymentLists = async () => {
     const { result } = await request.listById({ entity: "paymentMethod" });
     setPaymentMethodLists(result || [])
   }
   const saveData = (values) => {
-
+    onDetectDataChange(true)
     if (selectedCustomerId) {
       const parentId = selectedCustomerId;
       const { reversations } = values;
@@ -604,6 +610,8 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
       handleClose(false);
       history.push('/reservations')
     }
+    onDetectDataChange(false)
+
   }
   const onFinishFailed = () => { }
   const handleSearch = (values) => {
@@ -633,6 +641,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile }) =>
       setIsModalVisible(true)
     }
   }
+
   useEffect(() => {
     if (isVisit) {
       getProductCategories();
