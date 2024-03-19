@@ -1151,7 +1151,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                           {...restField}
                           style={{ width: '24%' }}
                           name={[name, 'prediente']}
-                          label={!index && "Prediente"}
+                          label={!index && "Pending"}
                         >
                           <label>${_form.getFieldsValue()?.reversations && (_form.getFieldsValue()?.reversations[index]?.prediente || 0)}</label>
                         </Form.Item>
@@ -1178,13 +1178,13 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
               <h3>Total Payment</h3>
             </Col>
             <Col span={6}>
-              <h3>${totalPaidAmount}</h3>
+              <h3>${totalPaidAmount.toFixed(2)}</h3>
             </Col>
             <Col span={6}>
-              <h3>${totalAllAmount}</h3>
+              <h3>${totalAllAmount.toFixed(2)}</h3>
             </Col>
             <Col span={6}>
-              <h3>${totalPredienteAmount}</h3>
+              <h3>${totalPredienteAmount.toFixed(2)}</h3>
             </Col>
           </Row>
 
