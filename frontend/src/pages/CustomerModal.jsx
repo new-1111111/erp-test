@@ -115,18 +115,7 @@ const CustomerModal = ({ setCustomerInfo, isEditWithReserva = false, isOpen, han
                     >
                         <Input type='number' />
                     </Form.Item>
-                    <Form.Item
-                        name="notes"
-                        label="Notes"
-                    >
-                        <TextArea />
-                    </Form.Item>
-                    <Form.Item
-                        name="address"
-                        label="Address"
-                    >
-                        <Input />
-                    </Form.Item>
+
                     {isUpdate && <Form.Item
                         name="notes"
                         label="Notes"
