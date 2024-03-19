@@ -99,7 +99,7 @@ app.use(
 
 app.get('*', (req, res) => {
   console.log(req.url)
-  res.sendFile(path.join(__dirname, 'frontends/erpFrontend/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontends/build', 'index.html'));
 });
 
 
