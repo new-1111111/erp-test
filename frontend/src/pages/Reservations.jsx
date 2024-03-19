@@ -574,6 +574,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
   const [newCategory, setNewCategory] = useState(``);
   const [newCustomer, setNewCustomer] = useState(``);
   const [productCategories, setProductCategories] = useState([]);
+  const [companyName, setCompanyName] = useState('');
   const [customerData, setCustomerData] = useState([]);
   const [isEditCustomer, setIsEditCustomer] = useState(false)
   const [isNewCustomer, setIsNewCustomer] = useState(false)
@@ -699,6 +700,12 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
   }, [customerData, updateCustomerInfo, selectedCustomerId, _form]);
 
   const handleProductChange = (value) => {
+    const company_name = [...originProductCategories.filter(obj => {
+      if (obj?.product_type?._id === value) {
+        return obj?.product_type?.company_name?.company_name
+      }
+    })]
+    setCompanyName(company_name[0]?.product_type?.company_name?.company_name)
     setProductCategories([...originProductCategories.filter(obj => {
       if (obj?.product_type?._id === value) {
         return obj
@@ -949,13 +956,9 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
               <Form.Item
                 name={'company_name'}
                 label="Company Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
               >
-                <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} />
+                <div style={{ display: 'none' }}>{companyName}</div>
+                <Input type='text' value={companyName} />
               </Form.Item>
             </Col>
             <Col span={3}></Col>
@@ -1308,7 +1311,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
         </Form>
       </Modal>
       <ProductCreationModal handleUpdatedInfo={(value) => handleUpdatedInfo(value)} productInfo={productObj} thirdParty={true} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
-    </div>
+    </div >
 
   );
 };
