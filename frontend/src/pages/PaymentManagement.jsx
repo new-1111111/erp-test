@@ -120,12 +120,12 @@ const PaymentManagement = () => {
             <Typography.Link onClick={() => viewPaymentDetails(record)}>
               <EyeOutlined style={{ fontSize: "15px" }} />
             </Typography.Link>
-            {console.log('%cfrontend\src\pages\PaymentManagement.jsx:121 record', 'color: #007acc;', record)}
+            {console.log('%cfrontend\src\pages\PaymentManagement.jsx:121 record', 'color: #007acc;', is_admin)}
 
-            {is_admin == true || company_id == record?.user_id?.company_id &&
+            {(is_admin == true || company_id == record?.user_id?.company_id) ?
               <Popconfirm title="Sure to Cancelled?" onConfirm={() => cancelPayment(record)}>
                 <CloseOutlined style={{ fontSize: "15px" }} />
-              </Popconfirm>
+              </Popconfirm> : null
             }
             {record?.status === -1 &&
               <span className='badge badge-light-danger'>Cancelled</span>
