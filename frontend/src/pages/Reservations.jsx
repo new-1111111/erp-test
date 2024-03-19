@@ -1289,7 +1289,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
           </Form.Item>
         </Form>
       </Modal>
-      <ProductCreationModal handleUpdatedInfo={(value) => handleUpdatedInfo(value)} productInfo={productObj} thirdParty={true} isModalVisible={isModalVisible} setIsModalVisible={(value) => { }} />
+      <ProductCreationModal handleUpdatedInfo={(value) => handleUpdatedInfo(value)} productInfo={productObj} thirdParty={true} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
     </div>
 
   );

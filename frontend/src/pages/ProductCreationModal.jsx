@@ -4,7 +4,7 @@ import { request } from "@/request";
 import history from "@/utils/history";
 import { Button, Form, Input, Modal } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const ProductCreationModal = ({ checkout = false, handleUpdatedInfo, productInfo = false, thirdParty = false, isModalVisible, setIsModalVisible, isUpdate, currentId, currentItem }) => {
@@ -13,7 +13,7 @@ const ProductCreationModal = ({ checkout = false, handleUpdatedInfo, productInfo
     const dispatch = useDispatch();
     const entity = checkout ? `checkoutProductLists` : "productCategories"
     const handleOk = () => {
-        setIsModalVisible(false);
+        setIsModalVisible(false)
     };
     const onFinish = async (values) => {
         setIsModalVisible(false)
@@ -38,6 +38,11 @@ const ProductCreationModal = ({ checkout = false, handleUpdatedInfo, productInfo
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+    const handleCancel = () => {
+        setIsModalVisible(false)
+
+    }
+
     useEffect(() => {
         _form.setFieldsValue(currentItem)
     }, [currentItem, _form]);
@@ -47,7 +52,7 @@ const ProductCreationModal = ({ checkout = false, handleUpdatedInfo, productInfo
         }
     }, [productInfo, thirdParty, _form])
     return (
-        <Modal title="Create Form" visible={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)} footer={null}>
+        <Modal title="Create Form" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
             <>
                 <Form
                     ref={formRef}
@@ -114,7 +119,7 @@ const ProductCreationModal = ({ checkout = false, handleUpdatedInfo, productInfo
                                 </Button>
 
                         }
-                        <Button type="ghost" onClick={() => setIsModalVisible(false)}>
+                        <Button type="ghost" onClick={handleCancel}>
                             cancel
                         </Button>
                     </Form.Item>
