@@ -962,6 +962,13 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
               </Form.Item>
             </Col>
             <Col span={3}></Col>
+            <Col span={4}><span style={{ color: 'red' }}>*</span> Product Type</Col>
+            <Col span={4}><span style={{ color: 'red' }}>*</span> Product</Col>
+            <Col span={3}><span style={{ color: 'red' }}>*</span>  Price</Col>
+            <Col span={2}>Preventa</Col>
+            <Col span={3}>Notes</Col>
+            <Col span={4}>Methods</Col>
+            <Col span={3}>action</Col>
             <Form.List name="reversations" initialValue={[{}]}>
               {(fields, { add, remove }) => (
                 <>
@@ -972,6 +979,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                         display: 'flex',
                         justifyContent: `space-around`,
                         width: '100%',
+                        height: '35px'
 
                       }}
                     >
@@ -979,7 +987,6 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
 
                         <Form.Item
                           {...restField}
-                          label={!index ? 'Product Type' : ''}
                           name={[name, `product_type`]}
                           wrapperCol={24}
                           rules={[
@@ -997,7 +1004,6 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
 
                           wrapperCol={24}
                           name={[name, `product_name`]}
-                          label={!index && "Product"}
                           rules={[
                             {
                               required: true,
@@ -1033,7 +1039,6 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                         <Form.Item
                           {...restField}
                           name={[name, `product_price`]}
-                          label={!index && "Price"}
                           wrapperCol={24}
                           rules={[
                             {
@@ -1053,7 +1058,6 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                           wrapperCol={24}
                           {...restField}
                           name={[name, `is_preventa`]}
-                          label={!index && "Preventa"}
                           valuePropName="checked"
                         >
                           <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
@@ -1064,14 +1068,13 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                           {...restField}
                           name={[name, `notes`]}
                           wrapperCol={24}
-                          label={!index && "Notes"}
                         >
                           <Input />
                         </Form.Item>
                       </Col>
                       <Col span={4}>
 
-                        <Form.Item name={[name, `method`]} label={!index && "Methods"}>
+                        <Form.Item name={[name, `method`]}>
                           <Select
                           >
                             {[...paymentMethodLists].map((data) => {
@@ -1086,7 +1089,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                       </Col>
                       <Col span={3}>
                         <Form.Item
-                          label={!index && `action`}
+
                         >
                           <MinusCircleOutlined onClick={() => {
                             remove(name)
@@ -1113,7 +1116,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                     </Row>
 
                   ))}
-                  <div style={{ "backgroundColor": "rgb(43 43 43)" }} className="opacity-25 rounded h-1px w-100 mb-5 mt-5" a="12312"></div>
+                  <div style={{ "border": "1px solid #f0f0f0" }} className="opacity-25 rounded h-1px w-100 mb-5 mt-5" a="12312"></div>
                   {/* <div className='border border-dark border-active active border-dashed d-flex pt-5 px-5'> */}
                   <Row style={{
                     display: `flex`,
@@ -1188,7 +1191,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                   }}>
                     <img src={imageUrl} width="100%" height='100%' alt='' />
                   </Row>
-                  <div className="opacity-25 rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
+                  <div className="opacity-25 rounded h-1px w-100 mb-5 mt-5" style={{ "border": "1px solid #f0f0f0" }}></div>
                   {/* </div> */}
                 </>
               )}
