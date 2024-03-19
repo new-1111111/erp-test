@@ -839,7 +839,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={5}>
+            <Col span={4}>
               <Form.Item
                 name={'email'}
                 label="Email"
@@ -874,7 +874,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={5}>
               <Form.Item
                 name={'phone'}
                 label="Phone"
@@ -910,7 +910,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={3}>
               <Form.Item
                 name={'iguser'}
                 wrapperCol={24}
@@ -945,7 +945,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={4}>
               <Form.Item
                 name={'company_name'}
                 label="Company Name"
@@ -958,6 +958,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                 <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} />
               </Form.Item>
             </Col>
+            <Col span={3}></Col>
             <Form.List name="reversations" initialValue={[{}]}>
               {(fields, { add, remove }) => (
                 <>
@@ -971,126 +972,143 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
 
                       }}
                     >
-                      <Form.Item
-                        {...restField}
-                        style={{ width: '19%' }}
-                        label={!index ? 'Product Type' : ''}
-                        name={[name, `product_type`]}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductChange}></SelectAsync>
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        style={{ width: '15%' }}
-                        wrapperCol={24}
-                        name={[name, `product_name`]}
-                        label={!index && "Product"}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
+                      <Col span={4}>
 
-                      >
-                        <Select
-                          onSearch={(value) => setNewCategory(value)}
-                          showSearch
-                          optionFilterProp="children"
-                          notFoundContent={<Button type="primary" onClick={(e) => {
-                            saveCategory(index)
-                          }}>
-                            Create
-                          </Button>}
-                          onChange={(value) => {
-                            productChangeEvent(value, index);
+                        <Form.Item
+                          {...restField}
+                          label={!index ? 'Product Type' : ''}
+                          name={[name, `product_type`]}
+                          wrapperCol={24}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+                        >
+                          <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductChange}></SelectAsync>
+                        </Form.Item>
+                      </Col>
+                      <Col span={4}>
+                        <Form.Item
+                          {...restField}
+
+                          wrapperCol={24}
+                          name={[name, `product_name`]}
+                          label={!index && "Product"}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+
+                        >
+                          <Select
+                            onSearch={(value) => setNewCategory(value)}
+                            showSearch
+                            optionFilterProp="children"
+                            notFoundContent={<Button type="primary" onClick={(e) => {
+                              saveCategory(index)
+                            }}>
+                              Create
+                            </Button>}
+                            onChange={(value) => {
+                              productChangeEvent(value, index);
+                            }}
+                          >
+                            {productCategories.map((optionField) => (
+                              <Select.Option
+                                key={optionField[`_id`]}
+                                value={optionField[`_id`]}
+                              >
+                                {optionField[`category_name`]}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={3}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, `product_price`]}
+                          label={!index && "Price"}
+                          wrapperCol={24}
+                          rules={[
+                            {
+                              required: true,
+                            },
+                          ]}
+                          onChange={(e) => {
+                            const newValue = e.target.value;
+                            handlePriceChange(newValue, index)
                           }}
                         >
-                          {productCategories.map((optionField) => (
-                            <Select.Option
-                              key={optionField[`_id`]}
-                              value={optionField[`_id`]}
-                            >
-                              {optionField[`category_name`]}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, `product_price`]}
-                        label={!index && "Price"}
-                        style={{ width: '15%' }}
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                        onChange={(e) => {
-                          const newValue = e.target.value;
-                          handlePriceChange(newValue, index)
-                        }}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        style={{ width: '10%' }}
-                        name={[name, `is_preventa`]}
-                        label={!index && "Preventa"}
-                        valuePropName="checked"
-                      >
-                        <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        style={{ width: '15%' }}
-                        name={[name, `notes`]}
-                        label={!index && "Notes"}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item name={[name, `method`]} style={{ width: '15%' }} label={!index && "Methods"}>
-                        <Select
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                      <Col span={2}>
+                        <Form.Item
+                          wrapperCol={24}
+                          {...restField}
+                          name={[name, `is_preventa`]}
+                          label={!index && "Preventa"}
+                          valuePropName="checked"
                         >
-                          {[...paymentMethodLists].map((data) => {
-                            return (
-                              <Select.Option
-                                value={data?._id}
-                              >{data?.method_name} </Select.Option>
-                            );
-                          })}
-                        </Select>
-                      </Form.Item>
-                      <Form.Item
-                        label={!index && `action`}
-                        style={{ width: '10%' }}
-                      >
-                        <MinusCircleOutlined onClick={() => {
-                          remove(name)
-                          const formData = _form?.getFieldsValue();
-                          if (formData) {
-                            const reversations = formData?.reversations;
-                            var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
-                            for (var i = 0; reversations && i < reversations.length; i++) {
-                              var obj = reversations[i];
-                              total_paid_amount += parseFloat(obj?.paid_amount || 0);
-                              total_amount += parseFloat(obj?.total_price || 0);
-                              tota_prediente += parseFloat(obj?.prediente || 0)
-                            }
-                            setTotalPaidAmount(total_paid_amount || 0)
-                            setTotalAllAmount(total_amount || 0)
-                            setTotalPredienteAmount(tota_prediente || 0)
+                          <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
+                        </Form.Item>
+                      </Col>
+                      <Col span={3}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, `notes`]}
+                          wrapperCol={24}
+                          label={!index && "Notes"}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                      <Col span={4}>
 
-                          };
-                        }} />
-                        <PlusCircleOutlined onClick={() => add()} />
-                      </Form.Item>
+                        <Form.Item name={[name, `method`]} label={!index && "Methods"}>
+                          <Select
+                          >
+                            {[...paymentMethodLists].map((data) => {
+                              return (
+                                <Select.Option
+                                  value={data?._id}
+                                >{data?.method_name} </Select.Option>
+                              );
+                            })}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={3}>
+                        <Form.Item
+                          label={!index && `action`}
+                        >
+                          <MinusCircleOutlined onClick={() => {
+                            remove(name)
+                            const formData = _form?.getFieldsValue();
+                            if (formData) {
+                              const reversations = formData?.reversations;
+                              var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
+                              for (var i = 0; reversations && i < reversations.length; i++) {
+                                var obj = reversations[i];
+                                total_paid_amount += parseFloat(obj?.paid_amount || 0);
+                                total_amount += parseFloat(obj?.total_price || 0);
+                                tota_prediente += parseFloat(obj?.prediente || 0)
+                              }
+                              setTotalPaidAmount(total_paid_amount || 0)
+                              setTotalAllAmount(total_amount || 0)
+                              setTotalPredienteAmount(tota_prediente || 0)
+
+                            };
+                          }} />
+                          <PlusCircleOutlined onClick={() => add()} />
+
+                        </Form.Item>
+                      </Col>
                     </Row>
+
                   ))}
                   <div style={{ "backgroundColor": "rgb(43 43 43)" }} className="opacity-25 rounded h-1px w-100 mb-5 mt-5" a="12312"></div>
                   {/* <div className='border border-dark border-active active border-dashed d-flex pt-5 px-5'> */}
