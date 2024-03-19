@@ -1,4 +1,5 @@
 import { request } from "@/request";
+import { CompanyPicker } from "./common";
 
 const { crud } = require("@/redux/crud/actions");
 const { Modal, Form, Input, Button } = require("antd");
@@ -7,7 +8,6 @@ const { default: TextArea } = require("antd/lib/input/TextArea");
 const { useRef, useState, useEffect } = require("react");
 const { useDispatch } = require("react-redux");
 const { useHistory } = require("react-router-dom/cjs/react-router-dom.min");
-
 const UserEdit = ({ }) => {
     const dispatch = useDispatch();
     const entity = 'admin'
@@ -18,12 +18,12 @@ const UserEdit = ({ }) => {
     const [userData, setUserData] = useState([]);
     const { id: id } = JSON.parse(localStorage?.auth)
     const onFinish = async (values) => {
+        values['company_id'] = values['company']?._id;
         const id = currentId;
         const { result: response } = await (request.update({ entity, id, jsonData: { ...values } }));
         customerForm.resetFields();
 
-        history.push(`/customer/admin`)
-        dispatch(crud.listByCustomer({ entity, jsonData: { _id: currentId } }));
+        history.push(`/admin`)
     };
     const handleCustomerModal = () => {
         customerForm.resetFields();
@@ -74,33 +74,29 @@ const UserEdit = ({ }) => {
                     <Input defaultValue={userData[0]?.name} />
                 </Form.Item>
 
-
-                {/* <Form.Item
-                    name="phone"
-                    label="Phone Number"
+                <Form.Item
+                    name="password"
+                    label="Password"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your phone!',
                         },
                     ]}
-
                 >
-                    <Input type='number' defaultValue={userData[0]?.name} />
-                </Form.Item>
+                    <Input.Password autoComplete="new-password" />
 
-                <Form.Item
-                    name="notes"
-                    label="Notes"
-                >
-                    <TextArea />
                 </Form.Item>
                 <Form.Item
-                    name="address"
-                    label="Address"
+                    name="company"
+                    label="Company"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
                 >
-                    <Input />
-                </Form.Item> */}
+                    <CompanyPicker />
+                </Form.Item>
                 <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', }}>
                     <Form.Item
                         wrapperCol={{
