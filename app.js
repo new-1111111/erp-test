@@ -1,23 +1,11 @@
 const express = require('express');
 
-const helmet = require('helmet');
+//const helmet = require('helmet');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const bodyParser = require("body-parser");
-// Create an Express application
-const app = express();
 
-// Parse incoming request bodies in a middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  }),
-);
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: '.variables.env' });
 
@@ -31,17 +19,19 @@ const errorHandlers = require('./handlers/errorHandlers');
 const { isValidAdminToken } = require('./controllers/erpControllers/authJwtController');
 
 // create our Express app
+const app = express();
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
 
 // Takes the raw requests and turns them into usable properties on req.body
 
-app.use(helmet());
+//app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontends/erpFrontend/build')));
 
-// app.use(cors());
+
 // // Sessions allow us to Contact data on visitors from request to request
 // // This keeps admins logged in and allows us to send flash messages
 // app.use(
@@ -68,15 +58,24 @@ app.use((req, res, next) => {
   next();
 });
 
+//app.get('*', (req, res) => {
+//        console.log(req.url)
+//  res.sendFile(path.join(__dirname, 'frontends/erpFrontend/build', 'index.html'));
+//});
 // app.use(function (req, res, next) {
 //   if (req.url.slice(-1) === "/" && req.path.length > 1) {
-//     // req.path = req.path.slice(0, -1);
+// req.path = req.path.slice(0, -1);
 //     req.url = req.url.slice(0, -1);
 //   }
 //   next();
 // });
 
 // Here our API Routes
+
+
+
+
+
 app.use(
   '/api',
   cors({
@@ -98,6 +97,12 @@ app.use(
   erpApiRouter
 );
 
+app.get('*', (req, res) => {
+  console.log(req.url)
+  res.sendFile(path.join(__dirname, 'frontends/erpFrontend/build', 'index.html'));
+});
+
+
 // If that above routes didnt work, we 404 them and forward to error handler
 app.use(errorHandlers.notFound);
 
@@ -111,5 +116,3 @@ if (app.get('env') === 'development') {
 // production error handler
 app.use(errorHandlers.productionErrors);
 
-// done! we export it so we can start the site in start.js
-module.exports = app;
