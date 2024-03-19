@@ -17,6 +17,8 @@ const Customers = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [selectedCompany, setSelectedCompany] = useState();
+  const { default: TextArea } = require("antd/lib/input/TextArea");
+
 
 
   const history = useHistory();
@@ -290,6 +292,19 @@ const Customers = () => {
                 ]}
               >
                 <Input type='number' />
+              </Form.Item>
+
+              <Form.Item
+                name="notes"
+                label="Notes"
+              >
+                <TextArea />
+              </Form.Item>
+              <Form.Item
+                name="address"
+                label="Address"
+              >
+                <Input />
               </Form.Item>
               <Form.Item
                 name="company"
