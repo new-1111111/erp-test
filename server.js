@@ -20,7 +20,7 @@ require('dotenv').config({ path: '.variables.env' });
 
 mongoose.connect("mongodb://eli_usr:AKIAVEVPEOCYEWSHRWPU@72.14.181.46:27017/eli_erp");
 
-mongoose.set('strictQuery', false);
+mongoose.set('strictQuery', true);
 
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
 mongoose.connection.on('error', (err) => {
