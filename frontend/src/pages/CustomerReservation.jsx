@@ -12,6 +12,7 @@ import EditReservationModal from "./EditReservationModal";
 import ProductCreationModal from "./ProductCreationModal";
 import { sendEmailWithCreation } from "./common";
 import PageLoader from '@/components/PageLoader';
+import history from "@/utils/history";
 
 const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClickNewReservaChange, customerInfo, setReversationInfo }) => {
     const { id: currentUserId } = JSON.parse(localStorage.auth)
@@ -194,6 +195,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
 
     const [reserveStatus, setReserveStatus] = useState(false)
     const [emailFooter, setEmailFooter] = useState('')
+    const [detectSaveData, setDetectSaveData] = useState(false)
     useEffect(() => {
         if (isClicked) editForm();
 
@@ -260,11 +262,13 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 activeMailInfo.push(obj);
             }
         }
-        preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo);
-        activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo);
+        // preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo);
+        // activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo);
         dispatch(crud.upload({ entity, jsonData: formData }));
+        setDetectSaveData(true)
         setTimeout(() => {
             dispatch(crud.listByCustomerContact({ entity, jsonData: { parent_id: parentId } }));
+            setDetectSaveData(false)
             setIsEdit(false)
             setReserveStatus(false)
         }, 500);
@@ -294,7 +298,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             setPaginations(pagination);
         })()
         getPaymentLists()
-    }, []);
+    }, [detectSaveData]);
     const [form] = Form.useForm();
     const [_editForm] = Form.useForm();
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
