@@ -24,16 +24,19 @@ const app = express();
 
 // Takes the raw requests and turns them into usable properties on req.body
 
+// Set Content Security Policy (CSP) headers
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "https://www.google-analytics.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://www.google-analytics.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"], // Add font sources
       // Add other directives as needed
     },
   })
 );
+
 
 app.use(cookieParser());
 app.use(express.json());
