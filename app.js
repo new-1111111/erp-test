@@ -62,7 +62,7 @@ app.use((req, res, next) => {
   res.locals.h = helpers;
   res.locals.admin = req.admin || null;
   res.locals.currentPath = req.path;
-  // res.setHeader("Content-Security-Policy", "default-src 'self' data: https://www.google-analytics.com https://www.mundoeli.com");
+  res.setHeader("Content-Security-Policy", "default-src 'self' data: https://www.google-analytics.com https://www.mundoeli.com");
   next();
 });
 
