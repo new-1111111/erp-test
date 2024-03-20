@@ -24,16 +24,17 @@ const app = express();
 
 // Takes the raw requests and turns them into usable properties on req.body
 
-// app.use(helmet.contentSecurityPolicy({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     scriptSrc: ["'self'", "'unsafe-inline'"], // Modify this according to your needs
-//     styleSrc: ["'self'", "'unsafe-inline'"], // Add this line to allow inline styles
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://www.google-analytics.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://www.google-analytics.com"],
+      // Add other directives as needed
+    },
+  })
+);
 
-//     // Add other directives as needed
-//   },
-// }));
-// app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
