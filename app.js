@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'frontends/erpFrontend/build')));
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 
 // // Sessions allow us to Contact data on visitors from request to request
 // // This keeps admins logged in and allows us to send flash messages
