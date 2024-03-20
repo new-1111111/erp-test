@@ -40,7 +40,7 @@ const SecondReportView = () => {
             // Check if the payment's week and year match the selected week and year
             if (paymentWeek === selectedWeek && paymentYear === selectedYear) {
                 // Check if the payment's user_id's company_id matches the selected company
-                if (payment.user_id.company_id === selectedCompany._id) {
+                if (payment?.user_id?.company_id === selectedCompany?._id) {
                     return true; // Payment matches the filter criteria
                 }
             }
