@@ -195,7 +195,6 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         (async () => {
             const { result: companyInfo } = await request.list({ entity: 'companyList' });
             form.setFieldsValue({ company_name: companyInfo[0]?._id })
-
         })()
 
         setParentInfo(customerInfo);
@@ -239,7 +238,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             return obj
         });
         const formData = new FormData();
-        formData.append('_file', currentFile);
+        formData.append('_file', imageUrl);
         formData.append('bulkData', JSON.stringify(reservationsWithParentId));
         const preventMailInfo = [], activeMailInfo = [];
         for (var i = 0; i < reservations.length; i++) {
@@ -256,17 +255,17 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 activeMailInfo.push(obj);
             }
         }
-        preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo, emailFooter);
-        activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo, emailFooter);
+        preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo);
+        activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo);
         dispatch(crud.upload({ entity, jsonData: formData }));
         setTimeout(() => {
             dispatch(crud.listByCustomerContact({ entity, jsonData: { parent_id: parentId } }));
             setIsEdit(false)
             setReserveStatus(false)
         }, 500);
-
     }
     const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
     };
     const [paginations, setPaginations] = useState({ current: 0, count: 0, total: 0, page: 0 });
 
@@ -279,6 +278,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 items[i][`reservation_id`] = `R${i + 1}`
                 for (var j = 0; j < result.length; j++) {
                     if (items[i].status === -1 && items[i]._id === result[j].log_id) {
+                        console.log(items[i].status === -1, items[i]._id === result[j].log_id);
                         items[i][`notes`] = result[j][`description`];
                     }
                 }
@@ -288,7 +288,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             setCustomerReservation([...items]);
             setPaginations(pagination);
         })()
-    }, [reserveStatus]);
+    }, []);
     const [form] = Form.useForm();
     const [_editForm] = Form.useForm();
     const [totalPaidAmount, setTotalPaidAmount] = useState(0);
@@ -307,10 +307,12 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     const [productObj, setProductObj] = useState(false);
     const [currentFile, setCurrentFile] = useState();
     const onChange = ({ fileList: newFileList }) => {
+        console.log(newFileList)
         setCurrentFile(newFileList[0]?.originFileObj)
         setFileList(newFileList);
     };
     const onPreview = async (file) => {
+        console.log(file, `1111`);
         let src = file.url;
         if (!src) {
             src = await new Promise((resolve) => {
@@ -367,6 +369,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 return obj;
             }
         })
+        console.log(productList, `productList`);
         setProductCategories(productList);
         // _editForm.setFieldsValue({ product_name: productList[0]?._id })
     }
@@ -377,6 +380,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             formData['reversations'][index][`prediente`] = (newValue || 0) - (formData['reversations'][index][`paid_amount`] || 0);
             const reversations = formData?.reversations;
 
+            console.log(reversations, '222');
             var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
             for (var i = 0; reversations && i < reversations.length; i++) {
                 var obj = reversations[i];
@@ -424,6 +428,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     const paginationChange = useCallback((page) => {
         setPaginations({ ...page, })
     }, [])
+    const inputRef = useRef(null);
     const [imageUrl, setImageUrl] = useState('')
 
     function loadBlobImageSrc(blob) {
@@ -747,7 +752,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                                 >
                                                     {fileList.length < 1 && '+ Upload'}
                                                 </Upload>
-                                                : <img src={imageUrl} width="70%" height='100%' alt='' />}
+                                                : <img src={imageUrl} onChange={onChange} onPaste={onChange} width="70%" height='100%' alt='' />}
                                         </Row>
                                     </>
                                 )}
@@ -808,6 +813,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                     dataSource={logHistories || []}
                     columns={logColumns}
                     rowClassName="editable-row"
+
 
                 />
             </Modal>
