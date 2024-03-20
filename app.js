@@ -33,7 +33,7 @@ const app = express();
 //     // Add other directives as needed
 //   },
 // }));
-app.use(helmet());
+// app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
