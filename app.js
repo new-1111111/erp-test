@@ -89,6 +89,10 @@ app.use(
   erpApiRouter
 );
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
+});
+
 // If that above routes didnt work, we 404 them and forward to error handler
 app.use(errorHandlers.notFound);
 
