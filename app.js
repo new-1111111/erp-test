@@ -1,6 +1,6 @@
 const express = require('express');
 
-//const helmet = require('helmet');
+const helmet = require('helmet');
 const path = require('path');
 const cors = require('cors');
 const session = require('express-session');
@@ -24,13 +24,12 @@ const app = express();
 
 // Takes the raw requests and turns them into usable properties on req.body
 
-//app.use(helmet());
+app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'frontend/build')));
-
+app.use(express.static(path.join(__dirname, 'frontends/erpFrontend/build')));
 
 // // Sessions allow us to Contact data on visitors from request to request
 // // This keeps admins logged in and allows us to send flash messages
@@ -58,22 +57,15 @@ app.use((req, res, next) => {
   next();
 });
 
-//app.get('*', (req, res) => {
-//        console.log(req.url)
-//  res.sendFile(path.join(__dirname, 'frontends/erpFrontend/build', 'index.html'));
-//});
 // app.use(function (req, res, next) {
 //   if (req.url.slice(-1) === "/" && req.path.length > 1) {
-// req.path = req.path.slice(0, -1);
+//     // req.path = req.path.slice(0, -1);
 //     req.url = req.url.slice(0, -1);
 //   }
 //   next();
 // });
 
 // Here our API Routes
-
-
-
 
 
 app.use(
@@ -97,12 +89,6 @@ app.use(
   erpApiRouter
 );
 
-app.get('*', (req, res) => {
-  console.log(req.url)
-  res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
-});
-
-
 // If that above routes didnt work, we 404 them and forward to error handler
 app.use(errorHandlers.notFound);
 
@@ -116,3 +102,5 @@ if (app.get('env') === 'development') {
 // production error handler
 app.use(errorHandlers.productionErrors);
 
+// done! we export it so we can start the site in start.js
+module.exports = app;
