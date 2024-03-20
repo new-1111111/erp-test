@@ -24,7 +24,13 @@ const app = express();
 
 // Takes the raw requests and turns them into usable properties on req.body
 
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"], // Modify this according to your needs
+    // Add other directives as needed
+  },
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
