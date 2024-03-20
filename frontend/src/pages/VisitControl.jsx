@@ -992,15 +992,15 @@ const VisitControl = () => {
         <Layout >
 
           <Tabs defaultActiveKey='3' onChange={(e) => setTabStatus(e)}>
-            <Tabs.TabPane tab="Inspections" key={3}>
+            <div tab="Inspections" key={3}>
               {/* Inspections */}
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Products" key={2}>
+            </div>
+            <div tab="Products" key={2}>
               {/* Products */}
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Visits" key={1}>
+            </div>
+            <div tab="Visits" key={1}>
               {/* Visits */}
-            </Tabs.TabPane>
+            </div>
           </Tabs>
           <Row gutter={24} style={{ textAlign: 'right' }}>
             <Col span={24}>

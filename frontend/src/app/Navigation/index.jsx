@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons';
 
 import history from '@/utils/history';
+import photo from '@/style/LogoEli.jpg';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -48,7 +49,7 @@ export default function Navigation() {
       <Sider collapsible collapsed={isNavMenuClose} onCollapse={onCollapse} className="navigation overflow-scroll">
         <div className="logo">
           <img
-            src={`https://www.mundoeli.com/wp-content/uploads/2022/05/LogoEli.jpg`}
+            src={photo}
             alt="Logo"
             style={{ display: "block", width: '100%' }}
           />

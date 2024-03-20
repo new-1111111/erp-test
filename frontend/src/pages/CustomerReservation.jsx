@@ -19,6 +19,11 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
     const formRef = useRef(null);
+    const [paymentMethodLists, setPaymentMethodLists] = useState([])
+    const getPaymentLists = async () => {
+        const { result } = await request.listById({ entity: "paymentMethod" });
+        setPaymentMethodLists(result || [])
+    }
     const handleMenuClick = ({ key }, record) => {
         if (key === `1`) {
             editItem(record)
@@ -288,6 +293,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             setCustomerReservation([...items]);
             setPaginations(pagination);
         })()
+        getPaymentLists()
     }, []);
     const [form] = Form.useForm();
     const [_editForm] = Form.useForm();
@@ -355,7 +361,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
 
     useEffect(async () => {
         const { result } = await request.list({ entity: 'systemInfo' });
-        setEmailFooter(result[0].email_footer)
+        setEmailFooter(result[0]?.email_footer)
 
         const id = currentCustomerId;
         const jsonData = { parent_id: id }
@@ -490,10 +496,11 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                         }}
                     >
                         <Row>
-                            <Col span={6}>
+                            <Col span={5}>
                                 <Form.Item
                                     name={'name'}
                                     label="Name"
+                                    wrapperCol={24}
                                     rules={[
                                         {
                                             required: true,
@@ -503,10 +510,13 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                     <Input disabled />
                                 </Form.Item>
                             </Col>
-                            <Col span={6}>
+                            <Col span={1}></Col>
+
+                            <Col span={5}>
                                 <Form.Item
                                     name={'email'}
                                     label="Email"
+                                    wrapperCol={24}
                                     rules={[
                                         {
                                             required: true,
@@ -516,10 +526,12 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                     <Input disabled />
                                 </Form.Item>
                             </Col>
-                            <Col span={6}>
+                            <Col span={1}></Col>
+                            <Col span={5}>
                                 <Form.Item
                                     name={'iguser'}
                                     label="IG"
+                                    wrapperCol={24}
                                     rules={[
                                         {
                                             required: true,
@@ -529,7 +541,9 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                     <Input disabled />
                                 </Form.Item>
                             </Col>
-                            <Col span={6}>
+                            <Col span={1}></Col>
+
+                            <Col span={5}>
                                 <Form.Item
                                     name={'company_name'}
                                     label="Company Name"
@@ -546,134 +560,154 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                         </Row>
                         <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
                         <Row>
+                            <Col span={4}><span style={{ color: 'red' }}>*</span> Product Type</Col>
+                            <Col span={4}><span style={{ color: 'red' }}>*</span> Product</Col>
+                            <Col span={3}><span style={{ color: 'red' }}>*</span>  Price</Col>
+                            <Col span={3}>Preventa</Col>
+                            <Col span={3}>Notes</Col>
+                            <Col span={4}>Methods</Col>
+                            <Col span={3}>action</Col>
                             <Form.List name="reversations" initialValue={[{}]}>
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map(({ key, name, ...restField }, index) => (
-                                            <Row key={key} style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }} >
-                                                <Form.Item
-                                                    style={{ width: '20%' }}
-                                                    label={!index && `Type`}
-                                                    name={[name, `product_type`]}
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                        },
-                                                    ]}
-                                                >
-                                                    <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductType} />
-                                                </Form.Item>
-                                                <Form.Item
-                                                    style={{ width: '18%' }}
+                                            <Row key={key} style={{ display: 'flex', justifyContent: 'space-around', width: '100%', height: '35px' }} >
+                                                <Col span={4}>
+                                                    <Form.Item
+                                                        name={[name, `product_type`]}
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductType} />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={4}>
 
-                                                    {...restField}
-                                                    wrapperCol={24}
-                                                    name={[name, `product_name`]}
-                                                    label={!index && "Product"}
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                        },
-                                                    ]}
+                                                    <Form.Item
 
-                                                >
-                                                    <Select
-                                                        onSearch={handleSearch}
-                                                        showSearch
-                                                        notFoundContent={<Button type="primary" onClick={(e) => saveCategory(index)}>
-                                                            <CheckOutlined />
-                                                        </Button>}
-                                                        optionFilterProp="children"
-                                                        onChange={(value) => {
-                                                            const { category_name, product_price } = productCategories.find((obj) => {
-                                                                if (obj._id === value) {
-                                                                    return obj
+                                                        {...restField}
+                                                        name={[name, `product_name`]}
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            },
+                                                        ]}
+
+                                                    >
+                                                        <Select
+                                                            onSearch={handleSearch}
+                                                            showSearch
+                                                            notFoundContent={<Button type="primary" onClick={(e) => saveCategory(index)}>
+                                                                <CheckOutlined />
+                                                            </Button>}
+                                                            optionFilterProp="children"
+                                                            onChange={(value) => {
+                                                                const { category_name, product_price } = productCategories.find((obj) => {
+                                                                    if (obj._id === value) {
+                                                                        return obj
+                                                                    }
+                                                                })
+                                                                var formData = form.getFieldsValue();
+                                                                if (formData) {
+                                                                    formData['reversations'][index][`payment_name`] = category_name;
+                                                                    formData['reversations'][index][`product_price`] = product_price;
+                                                                    form.setFieldsValue(formData)
+                                                                    handlePriceChange(product_price, index);
+                                                                    handlePaidChange(formData['reversations'][index][`paid_amount`], index)
                                                                 }
-                                                            })
-                                                            var formData = form.getFieldsValue();
-                                                            if (formData) {
-                                                                formData['reversations'][index][`payment_name`] = category_name;
-                                                                formData['reversations'][index][`product_price`] = product_price;
-                                                                form.setFieldsValue(formData)
-                                                                handlePriceChange(product_price, index);
-                                                                handlePaidChange(formData['reversations'][index][`paid_amount`], index)
-                                                            }
+                                                            }}
+                                                        >
+                                                            {[...productCategories].map((optionField) => (
+                                                                <Select.Option
+                                                                    key={optionField[`_id`]}
+                                                                    value={optionField[`_id`]}
+                                                                >
+                                                                    {optionField[`category_name`]}
+                                                                </Select.Option>
+                                                            ))}
+                                                        </Select>
+
+
+
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+
+                                                        {...restField}
+                                                        name={[name, `product_price`]}
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                            },
+                                                        ]}
+                                                        onChange={(e) => {
+                                                            const newValue = e.target.value;
+                                                            handlePriceChange(newValue, index)
+
                                                         }}
                                                     >
-                                                        {[...productCategories].map((optionField) => (
-                                                            <Select.Option
-                                                                key={optionField[`_id`]}
-                                                                value={optionField[`_id`]}
-                                                            >
-                                                                {optionField[`category_name`]}
-                                                            </Select.Option>
-                                                        ))}
-                                                    </Select>
+                                                        <Input prefix="$" />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={2}>
+                                                    <Form.Item
+                                                        {...restField}
+                                                        name={[name, `is_preventa`]}
+                                                        valuePropName="checked"
+                                                    >
+                                                        <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+                                                        {...restField}
+                                                        name={[name, `notes`]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={4}>
+                                                    <Form.Item name={[name, `method`]}>
+                                                        <Select
+                                                        >
+                                                            {[...paymentMethodLists].map((data) => {
+                                                                return (
+                                                                    <Select.Option
+                                                                        value={data?._id}
+                                                                    >{data?.method_name} </Select.Option>
+                                                                );
+                                                            })}
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
 
-
-
-                                                </Form.Item>
-                                                <Form.Item
-                                                    style={{ width: '20%' }}
-
-                                                    {...restField}
-                                                    name={[name, `product_price`]}
-                                                    label={!index && "Price"}
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                        },
-                                                    ]}
-                                                    onChange={(e) => {
-                                                        const newValue = e.target.value;
-                                                        handlePriceChange(newValue, index)
-
-                                                    }}
-                                                >
-                                                    <Input prefix="$" />
-                                                </Form.Item>
-                                                <Form.Item
-                                                    style={{ width: '10%' }}
-                                                    {...restField}
-                                                    name={[name, `is_preventa`]}
-                                                    label={!index && "Preventa"}
-                                                    valuePropName="checked"
-                                                >
-                                                    <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>Yes</Checkbox>
-                                                </Form.Item>
-                                                <Form.Item
-                                                    style={{ width: '20%' }}
-
-                                                    {...restField}
-                                                    name={[name, `notes`]}
-                                                    label={!index && "Notes"}
-                                                >
-                                                    <Input />
-                                                </Form.Item>
-                                                <Form.Item
-                                                    style={{ width: '10%' }}
-
-                                                    label={!index && `action`}
-                                                >
-                                                    <MinusCircleOutlined onClick={() => {
-                                                        remove(name)
-                                                        const formData = form?.getFieldsValue();
-                                                        if (formData) {
-                                                            const reversations = formData?.reversations;
-                                                            var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
-                                                            for (var i = 0; reversations && i < reversations.length; i++) {
-                                                                var obj = reversations[i];
-                                                                total_paid_amount += parseFloat(obj?.paid_amount || 0);
-                                                                total_amount += parseFloat(obj?.total_price || 0);
-                                                                tota_prediente += parseFloat(obj?.prediente || 0)
-                                                            }
-                                                            setTotalPaidAmount(total_paid_amount || 0)
-                                                            setTotalAllAmount(total_amount || 0)
-                                                            setTotalPredienteAmount(tota_prediente || 0)
-                                                        };
-                                                    }} />
-                                                    <PlusCircleOutlined onClick={() => add()} />
-                                                </Form.Item>
+                                                    >
+                                                        <MinusCircleOutlined onClick={() => {
+                                                            remove(name)
+                                                            const formData = form?.getFieldsValue();
+                                                            if (formData) {
+                                                                const reversations = formData?.reversations;
+                                                                var total_paid_amount = 0, total_amount = 0, tota_prediente = 0;
+                                                                for (var i = 0; reversations && i < reversations.length; i++) {
+                                                                    var obj = reversations[i];
+                                                                    total_paid_amount += parseFloat(obj?.paid_amount || 0);
+                                                                    total_amount += parseFloat(obj?.total_price || 0);
+                                                                    tota_prediente += parseFloat(obj?.prediente || 0)
+                                                                }
+                                                                setTotalPaidAmount(total_paid_amount || 0)
+                                                                setTotalAllAmount(total_amount || 0)
+                                                                setTotalPredienteAmount(tota_prediente || 0)
+                                                            };
+                                                        }} />
+                                                        <PlusCircleOutlined onClick={() => add()} />
+                                                    </Form.Item>
+                                                </Col>
                                             </Row>
                                         ))}
                                         <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>

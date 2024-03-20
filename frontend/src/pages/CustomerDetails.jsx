@@ -14,6 +14,7 @@ import moment from 'moment';
 import CustomerModal from './CustomerModal';
 import defaultAvatar from '@/style/demo-avatar.jpg'
 import { KTIcon } from '@/modules/Icons/KTIcon';
+import Item from 'antd/lib/list/Item';
 export default function Details() {
   const currentCustomerId = useParams().id;
   const entity = "client";
@@ -231,7 +232,7 @@ export default function Details() {
         </div>
       </div>
       <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Reservations" key="1">
+        <div tab="Reservations" key="1">
           <Modal title="Create Form" visible={isModalVisible} onCancel={handleCancel} footer={null}>
             <div className="profile-card">
               <Upload
@@ -343,10 +344,10 @@ export default function Details() {
           <CustomerModal isUpdate={isCustomerUpdate} isOpen={isOpen} parentId={currentCustomerId} handleCustomerModal={handleCustomerModal} customerInfo={currentItem} />
           <CustomerReservation isClicked={isClickNewReserva} setReversationInfo={handleReversationInfo} customerInfo={customerObj} parentId={currentCustomerId} onIsClickNewReservaChange={handleIsClickNewReservaChange}
           />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Payments" key="2">
+        </div>
+        <div tab="Payments" key="2">
           <CustomerPayment isClicked={isClickNewReserva} setReversationInfo={handleReversationInfo} customerInfo={customerObj} parentId={currentCustomerId} onIsClickNewReservaChange={handleIsClickNewReservaChange} />
-        </Tabs.TabPane>
+        </div>
       </Tabs>
 
     </DashboardLayout>

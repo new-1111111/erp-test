@@ -372,7 +372,7 @@ export default function CustomerDetails() {
 
   const handleChange = (info) => {
 
-    console.log(info,'dfinfo')
+    console.log(info, 'dfinfo')
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, (imageUrl) =>
         setAvatar(imageUrl),
@@ -388,7 +388,7 @@ export default function CustomerDetails() {
   return (
     <DashboardLayout>
       <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Details" key="1">
+        <div tab="Details" key="1">
           <Content style={{ padding: '0 0px' }}>
             <Row gutter={[16, 16]}>
               <Col span={6}>
@@ -466,8 +466,8 @@ export default function CustomerDetails() {
             <RecentTable entity={'quote'} dataTableColumns={assignedEmployeeColumns} />
           </div>
 
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Documentes" key="2">
+        </div>
+        <div tab="Documentes" key="2">
           <div className="whiteBox shadow">
             <div className="pad20">
               <h3 style={{ color: '#22075e', marginBottom: 5 }}>Documents</h3>
@@ -475,8 +475,8 @@ export default function CustomerDetails() {
 
             <RecentTable entity={'invoice'} dataTableColumns={documentsColumns} />
           </div>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Biling" key="3">
+        </div>
+        <div tab="Biling" key="3">
           <div className="whiteBox shadow">
             <div className="pad20">
               <h3 style={{ color: '#22075e', marginBottom: 5 }}>Recurrent Billing</h3>
@@ -498,7 +498,7 @@ export default function CustomerDetails() {
 
             <RecentTable entity={'invoice'} dataTableColumns={BillingEstimationColumns} />
           </div>
-        </Tabs.TabPane>
+        </div>
       </Tabs>
 
     </DashboardLayout>

@@ -272,7 +272,7 @@ export default function Details() {
   return (
     <DashboardLayout>
       <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Details" key="1">
+        <div tab="Details" key="1">
           <Modal title="Create Form" visible={isModalVisible} onCancel={handleCancel} footer={null}>
             <div className="profile-card">
               <Upload
@@ -483,8 +483,8 @@ export default function Details() {
           <RelatedPeople parentId={currentEmployeeId} />
           <MedicalDetail parentId={currentEmployeeId} />
           <Contract parentId={currentEmployeeId} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Work" key="2">
+        </div>
+        <div tab="Work" key="2">
           <AssignedCustomer parentId={currentEmployeeId} />
           <Schedule parentId={currentEmployeeId} />
 
@@ -494,10 +494,10 @@ export default function Details() {
             </div>
             <Table columns={paymentColumns} />
           </div>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Documents" key="3">
+        </div>
+        <div tab="Documents" key="3">
           <EmployeeDocumentManage parentId={currentEmployeeId} />
-        </Tabs.TabPane>
+        </div>
       </Tabs>
 
     </DashboardLayout>
