@@ -1,6 +1,7 @@
 require('module-alias/register');
 const mongoose = require('mongoose');
-
+const socketIo = require('socket.io');
+const http = require('http');
 // Make sure we are running node 7.6+
 const [major, minor] = process.versions.node.split('.').map(parseFloat);
 if (major < 14 || (major === 14 && minor <= 0)) {
@@ -15,7 +16,7 @@ require('dotenv').config({ path: '.variables.env' });
 // mongoose.connect(process.env.DATABASE);
 
 mongoose.set('strictQuery', false);
-mongoose.connect("mongodb://eli_usr:AKIAVEVPEOCYEWSHRWPU@72.14.181.46:27017/eli_erp", {
+mongoose.connect("mongodb://127.0.0.1:27017/erp-pro", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -30,13 +31,29 @@ glob.sync('./models/**/*.js').forEach(function (file) {
   const model = require(path.resolve(file));
 });
 
-
+var g_checkout = false;
 // Start our app!
 const app = require('./app');
-
-
-
-app.set('port', process.env.PORT || 8888);
-const server = app.listen(app.get('port'), () => {
-  console.log(`Express running → On PORT : ${server.address().port}`);
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: 'https://eli.mundoeli.com',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
 });
+io.on('connection', (socket) => {
+  socket.on('checkoutData', (data) => {
+    if (typeof data === 'string') {
+      io.emit('checkoutData', g_checkout[data]);
+    } else {
+      g_checkout[data.user_id] = data;
+      io.emit('checkoutData', data);
+    }
+    console.log(data, g_checkout, '444')
+  })
+})
+server.listen(process.env.PORT || 8880, () => {
+  console.log(`Express running → On PORT : ${server.address().port}`);
+})
+
