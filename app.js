@@ -28,6 +28,8 @@ app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
     scriptSrc: ["'self'", "'unsafe-inline'"], // Modify this according to your needs
+    styleSrc: ["'self'", "'unsafe-inline'"], // Add this line to allow inline styles
+
     // Add other directives as needed
   },
 }));
