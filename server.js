@@ -16,7 +16,7 @@ require('dotenv').config({ path: '.variables.env' });
 // mongoose.connect(process.env.DATABASE);
 
 mongoose.set('strictQuery', false);
-mongoose.connect("mongodb://127.0.0.1:27017/erp-pro", {
+mongoose.connect("mongodb://eli_usr:AKIAVEVPEOCYEWSHRWPU@72.14.181.46:27017/eli_erp", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
