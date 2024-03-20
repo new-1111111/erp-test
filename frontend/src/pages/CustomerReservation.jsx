@@ -675,7 +675,11 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={4}>
-                                                    <Form.Item name={[name, `method`]}>
+                                                    <Form.Item name={[name, `method`]} rules={[
+                                                        {
+                                                            required: true,
+                                                        },
+                                                    ]}>
                                                         <Select
                                                         >
                                                             {[...paymentMethodLists].map((data) => {
