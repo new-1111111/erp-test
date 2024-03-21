@@ -55,7 +55,7 @@ router
       from: "eli@mundoeli.com",
       to: req.body.to,
       subject: req.body.subject,
-      text: req.body.text,
+      html: req.body.text,
     };
     const transporter = nodemailer.createTransport({
       host: "server012.leo.com.pa",
