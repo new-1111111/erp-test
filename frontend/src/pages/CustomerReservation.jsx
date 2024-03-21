@@ -873,7 +873,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 }}
                 onChange={paginationChange}
             />
-            <EditReservationModal isEditReserva={isEditReserva} setIsEditReserva={(value) => { setIsEditReserva(value) }} customerInfo={customerInfo} currentItem={selectedRecord} currentCustomerId={currentCustomerId} />
+            <EditReservationModal setDetectSaveData={setDetectSaveData} detectSaveData={detectSaveData} isEditReserva={isEditReserva} setIsEditReserva={(value) => { setIsEditReserva(value) }} customerInfo={customerInfo} currentItem={selectedRecord} currentCustomerId={currentCustomerId} />
             <ProductCreationModal productInfo={productObj} thirdParty={true} isModalVisible={isModalVisible} setIsModalVisible={(value) => {
                 setIsModalVisible(value);
                 getProductCategories();

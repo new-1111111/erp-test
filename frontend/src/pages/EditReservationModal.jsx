@@ -11,7 +11,7 @@ const { useForm } = require("antd/lib/form/Form");
 const { useEffect, useState } = require("react");
 const { useDispatch } = require("react-redux");
 
-const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, isEditReserva, setIsEditReserva }) => {
+const EditReservationModal = ({ setDetectSaveData, detectSaveData, currentItem, customerInfo, currentCustomerId, isEditReserva, setIsEditReserva }) => {
     const paymentHistoryColumn = [
         {
             title: 'Payment Id',
@@ -71,7 +71,8 @@ const EditReservationModal = ({ currentItem, customerInfo, currentCustomerId, is
             }
             dispatch(crud.update({ entity: `customerReversation`, id, jsonData: values }));
             dispatch(crud.listByCustomerContact({ entity: `customerReversation`, jsonData: { parent_id: currentCustomerId } }));
-            setIsEditReserva(false)
+            setIsEditReserva(false);
+            setDetectSaveData(!detectSaveData);
         }
     }
     const onFinishFailed = (errorInfo) => {
