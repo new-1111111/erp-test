@@ -265,7 +265,8 @@ export async function sendEmailWithCreation(data, type, customerInfo, emailFoote
            ${emailFooter}`
     }
     const result = await axios.post('/send-email', {
-        subject, text, to: customerInfo?.email
+        subject, text, to: customerInfo?.email,
+        contentType: 'text/html'
     }, {
         withCredentials: true
     });
