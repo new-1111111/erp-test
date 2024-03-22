@@ -792,7 +792,19 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
   }, [_form, handlePriceChange, handlePaidChange, productCategories]);
 
 
+  const [productType, setProductType] = useState('')
+  const [originProductTypes, setOriginProductTypes] = useState('')
+  const handleCompanyType = async (value) => {
+    const { result } = await request.list({ entity: `productTypes` });
+    setOriginProductTypes(result)
 
+    const productTypes = originProductTypes.filter((obj) => {
+      if (obj?.company_name?._id === value) {
+        return obj;
+      }
+    })
+    setProductType(productTypes);
+  }
 
   return (
     <div>
@@ -957,8 +969,9 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                 name={'company_name'}
                 label="Company Name"
               >
-                <div style={{ display: 'none' }}>{companyName}</div>
-                <Input type='text' value={companyName} />
+
+                <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} onChange={handleCompanyType} />
+
               </Form.Item>
             </Col>
             <Col span={3}></Col>
@@ -995,7 +1008,17 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                             },
                           ]}
                         >
-                          <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductChange}></SelectAsync>
+                          <Select onChange={handleProductChange}>
+                            {[...productType].map((optionField) => (
+                              <Select.Option
+                                key={optionField[`_id`]}
+                                value={optionField[`_id`]}
+                              >
+                                {optionField[`product_name`]}
+                              </Select.Option>
+                            ))}
+                            {/* <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductType} /> */}
+                          </Select>
                         </Form.Item>
                       </Col>
                       <Col span={4}>
