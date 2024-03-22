@@ -158,7 +158,7 @@ export default function Details() {
                   <div className='d-flex flex-wrap fw-bold fs-6 mb-4 pe-2'>
                     <KTIcon iconName={'phone'} className='fs-1 text-default' />
                     <label className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'>
-                      <a target="_blank" href={`https://web.whatsapp.com/send?l=es&phone=${currentItem?.phone}`}>{currentItem?.phone}</a>
+                      <a target="_blank" href={`https://web.whatsapp.com/send?l=es&phone=507${currentItem?.phone}`}>{currentItem?.phone}</a>
                     </label>
                     <KTIcon iconName={'instagram'} className='fs-1 text-default' />
                     <label
