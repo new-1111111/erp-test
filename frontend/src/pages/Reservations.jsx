@@ -605,7 +605,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
         return obj
       })
       const formData = new FormData();
-      formData.append('_file', currentFile);
+      formData.append('_file', imageUrl);
       formData.append('bulkData', JSON.stringify(reversationsWithParentId));
       dispatch(crud.upload({ entity, jsonData: formData }));
       handleClose(false);
@@ -798,7 +798,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
     const { result } = await request.list({ entity: `productTypes` });
     setOriginProductTypes(result)
 
-    const productTypes = originProductTypes.filter((obj) => {
+    const productTypes = result.filter((obj) => {
       if (obj?.company_name?._id === value) {
         return obj;
       }
@@ -1368,7 +1368,8 @@ const NewPaymentModal = ({ isVisit, handleClose }) => {
       })
       const jsonData = [{ customer_id, user_id: currentUserId, reservation: saveData }]
       const formData = new FormData();
-      formData.append('_file', currentFile);
+      console.log('%cfrontend\src\pages\Reservations.jsx:1371 imageUrl', 'color: #007acc;', imageUrl);
+      formData.append('_file', imageUrl);
       formData.append('bulkData', JSON.stringify(jsonData));
       dispatch(crud.upload({ entity: `paymentHistory`, jsonData: formData }));
       // dispatch(crud.listByCustomerContact({ entity, jsonData: { parent_id: parentId } }));
