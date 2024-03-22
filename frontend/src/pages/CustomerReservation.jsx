@@ -798,8 +798,8 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
 
                                                         <Form.Item
                                                             {...restField}
-                                                            name={[name, 'prediente']}
-                                                            label={!index && "Prediente"}
+                                                            name={[name, 'Pending']}
+                                                            label={!index && "Pending"}
                                                         >
                                                             <label>${form.getFieldsValue()?.reversations && (form.getFieldsValue()?.reversations[index]?.prediente || 0)}</label>
                                                         </Form.Item>
@@ -829,13 +829,13 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                 <h3>Total Payment</h3>
                             </Col>
                             <Col span={6}>
-                                <h3>${totalPaidAmount}</h3>
+                                <h3>${totalPaidAmount.toFixed(2)}</h3>
                             </Col>
                             <Col span={6}>
-                                <h3>${totalAllAmount}</h3>
+                                <h3>${totalAllAmount.toFixed(2)}</h3>
                             </Col>
                             <Col span={6}>
-                                <h3>${totalPredienteAmount}</h3>
+                                <h3>${totalPredienteAmount.toFixed(2)}</h3>
                             </Col>
                         </Row>
                         <div className="opacity-25 bg-dark rounded h-1px w-100 mb-5 mt-5" style={{ "backgroundColor": "rgb(43 43 43)" }}></div>
