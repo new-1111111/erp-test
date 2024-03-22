@@ -263,8 +263,8 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                 activeMailInfo.push(obj);
             }
         }
-        preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo);
-        activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo);
+        // preventMailInfo.length && await sendEmailWithCreation(preventMailInfo, 'preventa', customerInfo);
+        // activeMailInfo.length && await sendEmailWithCreation(activeMailInfo, 'active', customerInfo);
         dispatch(crud.upload({ entity, jsonData: formData }));
         setDetectSaveData(true)
         setTimeout(() => {
@@ -390,7 +390,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         const { result } = await request.list({ entity: `productTypes` });
         setOriginProductTypes(result)
 
-        const productTypes = originProductTypes.filter((obj) => {
+        const productTypes = result.filter((obj) => {
             if (obj?.company_name?._id === value) {
                 return obj;
             }
