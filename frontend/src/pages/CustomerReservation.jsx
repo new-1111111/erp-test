@@ -156,12 +156,12 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         },
 
     ];
-
     const cancelItem = (item) => {
         setIsCancelModal(true);
         setCurrentId(item?._id)
     }
     const deliveredItem = (item) => {
+        setDetectSaveData(!detectSaveData)
         dispatch(crud.update({ entity, id: item?._id, jsonData: { status: 2 } }));
         dispatch(crud.create({ entity: 'logHistory', jsonData: { log_id: item?._id, where_: `reserva`, description: "Delivered", user_id: currentUserId } }))
         setTimeout(() => {
@@ -171,6 +171,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         }, 500);
     }
     const handleCancel = () => {
+        setDetectSaveData(!detectSaveData)
         if (currentId) {
             const id = currentId;
 
@@ -841,7 +842,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
 
             </Modal>
             <Modal title={`Please input your comment before cancel.`} onOk={handleCancel} onCancel={() => setIsCancelModal(false)} visible={isCancelModal}>
-                <Form>
+                <Form >
                     <Form.Item>
                         <TextArea onChange={(e) => setCancelCommit(e?.target?.innerHTML)} />
                     </Form.Item>
