@@ -159,25 +159,43 @@ export async function sendEmailWithCreation(data, type, customerInfo, emailFoote
         for (var i = 0; i < data.length; i++) {
             const obj = data[i];
             proudct_tds += `<tr>
-                <td>${obj?.product_info?.product_type?.product_name}  -  ${obj?.product_info?.category_name}</td>
-                <td>${obj?.product_info?.product_price}</td>
-                <td>${obj?.paid_amount}</td></tr>
+                <td style="
+    border: 1px solid;
+">${obj?.product_info?.product_type?.product_name}  -  ${obj?.product_info?.category_name}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.product_info?.product_price}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.paid_amount}</td></tr>
             `
         }
         text = `
             <h3>Hola ${customerInfo?.name}</h3>
-            <label>Te hemos reservado un producto en la tienda:</label>
-            <table>
+            <label>Te hemos reservado un producto en la tienda:</label><br /> <br />
+            <table style="
+    text-align: center;
+    border: 1px solid grey;
+    width: 400px;
+    border-collapse: collapse;
+    padding: 20px;
+">
                 <thead>
-                    <th>Producto</th>
-                    <th>Valor</th>
-                    <th>Abono</th>
+                    <th style="
+    border: 1px solid;
+">Producto</th>
+                    <th style="
+    border: 1px solid;
+">Valor</th>
+                    <th style="
+    border: 1px solid;
+">Abono</th>
                 </thead>
                 <tbody>
                     ${proudct_tds}
                 </tbody>
             </table>`
-        text += `Usted cuenta con 60 días para retirar el producto. Cuando realice el pago restante <br />
+        text += ` <br /> <br />Usted cuenta con 60 días para retirar el producto. Cuando realice el pago restante <br />
                  podrá retirar el producto en <a href="https://www.mundoeli.com/contacto/">nuestra tienda física</a> o coordinar un servicio de envío.<br />
                 Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
                 ${emailFooter}`
@@ -186,25 +204,43 @@ export async function sendEmailWithCreation(data, type, customerInfo, emailFoote
         for (var i = 0; i < data.length; i++) {
             const obj = data[i];
             proudct_tds += `<tr>
-                <td>${obj?.product_info?.product_type?.product_name}  -  ${obj?.product_info?.category_name}</td>
-                <td>${obj?.product_info?.product_price}</td>
-                <td>${obj?.paid_amount}</td></tr>
+                <td style="
+    border: 1px solid;
+">${obj?.product_info?.product_type?.product_name}  -  ${obj?.product_info?.category_name}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.product_info?.product_price}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.paid_amount}</td></tr>
             `
         }
         text = `
             <h3>Hola ${customerInfo?.name}</h3>
-            <label>Te hemos creado una reserva con los siguientes datos:</label>
-            <table>
+            <label>Te hemos creado una reserva con los siguientes datos:</label><br /> <br />
+            <table style="
+    text-align: center;
+    border: 1px solid grey;
+    width: 400px;
+    border-collapse: collapse;
+    padding: 20px;
+">
                 <thead>
-                    <th>Producto</th>
-                    <th>Valor</th>
-                    <th>Abono</th>
+                    <th style="
+    border: 1px solid;
+">Producto</th>
+                    <th style="
+    border: 1px solid;
+">Valor</th>
+                    <th style="
+    border: 1px solid;
+">Abono</th>
                 </thead>
                 <tbody>
                     ${proudct_tds}
                 </tbody>
             </table>`
-        text += `Cuando el producto esté en la tienda te notificaremos por esta vía para que puedas <br />
+        text += ` <br /> <br />Cuando el producto esté en la tienda te notificaremos por esta vía para que puedas <br />
                  retirar el producto en <a href="https://www.mundoeli.com/contacto/">nuestra tienda física</a> o coordinar un servicio de envío.<br />
                 Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
                ${emailFooter}`
@@ -214,25 +250,43 @@ export async function sendEmailWithCreation(data, type, customerInfo, emailFoote
         for (var i = 0; i < data.length; i++) {
             const obj = data[i];
             proudct_tds += `<tr>
-                <td>${obj?.product_info?.product_type?.product_name}  -  ${obj?.product_info?.category_name}</td>
-                <td>${obj?.product_info?.product_price}</td>
-                <td>${obj?.paid_amount}</td></tr>
+                <td style="
+    border: 1px solid;
+">${obj?.product_info?.product_type?.product_name}  -  ${obj?.product_info?.category_name}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.product_info?.product_price}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.paid_amount}</td></tr>
             `
         }
         text = `
             <h3>Hola ${customerInfo?.name}</h3>
-            <label>Ya tenemos disponible el siguiente producto para retirar:</label>
-            <table>
+            <label>Ya tenemos disponible el siguiente producto para retirar:</label><br /> <br />
+            <table style="
+    text-align: center;
+    border: 1px solid grey;
+    width: 400px;
+    border-collapse: collapse;
+    padding: 20px;
+">
                 <thead>
-                    <th>Producto</th>
-                    <th>Valor</th>
-                    <th>Abono</th>
+                    <th style="
+    border: 1px solid;
+">Producto</th>
+                    <th style="
+    border: 1px solid;
+">Valor</th>
+                    <th style="
+    border: 1px solid;
+">Abono</th>
                 </thead>
                 <tbody>
                     ${proudct_tds}
                 </tbody>
             </table>`
-        text += `Usted cuenta con 60 días para retirar el producto. Cuando realice el pago restante <br />
+        text += `<br /> <br />CUsted cuenta con 60 días para retirar el producto. Cuando realice el pago restante <br />
                  podrá retirar el producto en <a href="https://www.mundoeli.com/contacto/" target="_blank">nuestra tienda física</a> o coordinar un servicio de envío.<br />
                 Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
                 ${emailFooter}`
@@ -242,26 +296,44 @@ export async function sendEmailWithCreation(data, type, customerInfo, emailFoote
         for (var i = 0; i < data.length; i++) {
             const obj = data[i];
             proudct_tds += `<tr>
-                <td>${obj?.product_type?.product_name}  -  ${obj?.product_name?.category_name}</td>
-                <td>${obj?.product_price}</td>
-                <td>${obj?.paid_amount}</td></tr>
+                <td style="
+    border: 1px solid;
+">${obj?.product_type?.product_name}  -  ${obj?.product_name?.category_name}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.product_price}</td>
+                <td style="
+    border: 1px solid;
+">${obj?.paid_amount}</td></tr>
             `
         }
         text = `
             <h3>Hola ${customerInfo?.name}</h3>
-            <label>La siguiente orden ha sido completada o programada para envío.</label>
+            <label>La siguiente orden ha sido completada o programada para envío.</label><br /> <br />
             <label>Productos:</label>
-            <table>
+            <table style="
+    text-align: center;
+    border: 1px solid grey;
+    width: 400px;
+    border-collapse: collapse;
+    padding: 20px;
+">
                 <thead>
-                    <th>Producto</th>
-                    <th>Valor</th>
-                    <th>Abono</th>
+                    <th style="
+    border: 1px solid;
+">Producto</th>
+                    <th style="
+    border: 1px solid;
+">Valor</th>
+                    <th style="
+    border: 1px solid;
+">Abono</th>
                 </thead>
                 <tbody>
                     ${proudct_tds}
                 </tbody>
             </table>`
-        text += `Para más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
+        text += `<br /> <br />CPara más información puede escribir al Whatsapp <a href="https://web.whatsapp.com/send?l=es&phone=50763911319">50763911319</a>.<br />
            ${emailFooter}`
     }
     const result = await axios.post('/send-email', {
