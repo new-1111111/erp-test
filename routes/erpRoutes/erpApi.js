@@ -62,7 +62,7 @@ router
       port: 587,
       auth: {
         user: "eli@mundoeli.com",
-        pass: "Oes23w%56",
+        pass: "$z4788Wum",
       },
     });
     try {
