@@ -239,7 +239,7 @@ const CheckoutPage = () => {
                                 {methodDescription}
                             </div>
                             <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                            <div className="row my-5">
+                            <div className="row" style={{ marginTop: "60px" }}>
                                 <div className="col-6">
                                     <Button type="primary" size={'small'}>
                                         SCAN BARCODE
@@ -308,9 +308,9 @@ const CheckoutPage = () => {
                             <div className="d-flex h-50px w-100 my-3">
                                 {[...paymentMethodLists].map((data, index) => {
                                     return (
-                                        <span onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'] + "." + data['method_description'])} type="primary" key={index}
+                                        <div onClick={() => handlePaymentMethod(data['method_name'] + "." + data['_id'] + "." + data['method_description'])} type="primary" key={index}
                                             style={{ color: 'white', background: selectedPaymentMethodId === data['_id'] ? '#1B84FF' : 'grey' }}
-                                            className="w-auto mx-2 d-inline btn">{data?.method_name}</span>
+                                            className="w-auto mx-2 d-inline btn">{data?.method_name}</div>
                                     );
                                 })}
                             </div>
