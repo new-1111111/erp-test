@@ -195,39 +195,38 @@ const CheckoutPage = () => {
                 <Layout className="h-100" style={{ minHight: "0px !important" }}>
                     <div className="d-flex row" style={{ backgroundColor: "#F2F2F2", height: "87%", padding: "18px 18px 18px 28px" }}>
                         <div style={{ backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "47%" }}>
-                            <div className="d-flex flex-end w-100 mt-3">
-                                <input placeholder="search products here..." className="border" onChange={(e) => searchCategories(e.target.value)} name="" />
-                                {/* <Button type="primary" shape="circle" icon={<SearchOutlined />} /> */}
-                            </div>
+
                             <div className="h-25 w-100 overflow-auto row px-4 py-4 flex-start">
 
                                 {[...productLists].sort((a, b) => a.product_price - b.product_price).map((data, index) => {
-                                    return <div className="text-center border border-success rounded mx-2 p-0" key={index} onClick={() => addToOrders(data)} style={{ width: '120px', }}>
+                                    return <div className="text-center rounded mx-2 p-0 d-flex align-items-center justify-content-center " key={index} onClick={() => addToOrders(data)} style={{ width: '120px', background: '#2D2D2D26', height: "80px", flexDirection: 'column' }}>
                                         <p className="card-title text" style={{
                                             fontSize: "14px",
                                             fontFamily: "Inter !important", fontWeight: "600",
-                                            padding: "10px "
                                         }}>{data?.product_name}</p>
-                                        <div style={{ border: "1px solid #2D2D2D26" }}></div>
-
-                                        <p className="text-success" style={{ padding: "10px", fontSize: "14px", fontWeight: "600", fontFamily: "Inter !important" }}>${data?.product_price}</p>
+                                        <p className="text-success" style={{ fontSize: "14px", fontWeight: "600", fontFamily: "Inter !important" }}>${data?.product_price}</p>
                                     </div>
                                 })}
                             </div>
                             <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                            <div className="h-30 w-100 overflow-auto row px-4 py-4 flex-start align-items-baseline">
-                                <div className="d-flex h-30px overflow-scroll w-50" style={{ gap: "31px" }}>
+
+                            <div className="h-30 overflow-auto row px-4 py-4 align-items-baseline">
+                                <div className="d-flex  h-30px overflow-scroll w-75" style={{ gap: "31px" }}>
                                     {[...companyLists].map((data, index) => {
                                         return <div key={index} style={{ cursor: 'pointer', color: clickedIndex === data?._id ? '#1B84FF' : 'black' }} onClick={() => getProductListsWithCompany(data?._id, data?.primary, data?.company_name)}>
                                             <span>{data?.company_name}</span>
                                         </div>
                                     })}
                                 </div>
-
+                                <div className="d-flex flex-end mt-3  w-25" >
+                                    <input placeholder="search products here..." className="border" onChange={(e) => searchCategories(e.target.value)} name="" />
+                                    <Button type="primary" shape="circle" icon={<SearchOutlined />} />
+                                </div>
                             </div>
+
                             <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
                                 {[...productCategories].map((data, index) => {
-                                    return <div className="text-center  border border-gray-600 rounded mx-2" key={index} style={{ width: '112px' }}>
+                                    return <div className="text-center  rounded mx-2 d-flex align-items-center justify-content-center" key={index} style={{ width: '112px', background: "#2D2D2D26", height: '80px' }}>
                                         <p onClick={() => getProductLists(data?._id)} className="card-title text py-4" style={{
                                             fontSize: "14px",
                                             fontFamily: "Inter !important", fontWeight: "600"
