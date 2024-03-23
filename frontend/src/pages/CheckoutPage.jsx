@@ -116,7 +116,7 @@ const CheckoutPage = () => {
         }
         const sortedData = _.sortBy([...data], 'product_name');
         setTotalOrderPrice(priceFormat(total_price));
-        setFinalOrders([...sortedData]);
+        setFinalOrders([...data]);
         addTaxPercent(taxStatus);
         const socket = io(BASE_URL, {
             withCredentials: true
@@ -235,7 +235,7 @@ const CheckoutPage = () => {
                                 })}
                             </div>
                             <div className="w-100 overflow-auto row px-4 py-4 flex-start align-content-sm-between h-25">
-                                {methodDescription}
+                                {/* {methodDescription} */}
                             </div>
                             <div style={{ border: "1px solid #2D2D2D26" }}></div>
                             <div className="row" style={{ marginTop: "60px" }}>
@@ -253,7 +253,7 @@ const CheckoutPage = () => {
                         </div>
                         <div style={{ height: 'fit-content', backgroundColor: "#FFFFFF", boxShadow: "20px 22px 63px 3px rgba(0, 0, 0, 0.1)", width: "50%", marginLeft: "20px", paddingBottom: "50px" }}>
                             <div className="h-100px overflow-auto">
-                                {[...finalOrders].map((data, index) => {
+                                {[...finalOrders.slice().reverse()].map((data, index) => {
                                     return <>
                                         <div className='d-flex justify-content-sm-between mx-2 my-5'>
                                             <span key={index}>
