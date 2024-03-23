@@ -498,7 +498,7 @@ const CustomerPayment = ({ parentId: currentCustomerId, isClicked, onIsClickNewR
                                                 <Col span={4}>
                                                     <Form.Item
                                                         name={[name, 'prediente']}
-                                                        label="Prediente"
+                                                        label="Pending"
                                                     >
                                                         <label>${form.getFieldsValue()?.reversations[index]?.prediente || 0}</label>
                                                     </Form.Item>
