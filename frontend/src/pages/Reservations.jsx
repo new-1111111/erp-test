@@ -1191,7 +1191,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                           name={[name, 'total_amount']}
                           label={!index && "Total"}
                         >
-                          <label>${(_form.getFieldsValue()?.reversations && (_form.getFieldsValue()?.reversations[index]?.total_price || 0)).toFixed(2)}</label>
+                          <label>${(_form.getFieldsValue()?.reversations && (_form.getFieldsValue()?.reversations[index]?.total_price || 0))}</label>
                         </Form.Item>
 
                         <Form.Item
@@ -1200,7 +1200,7 @@ const NewReservationModal = ({ isVisit, handleClose, imageUrl, currentFile, onDe
                           name={[name, 'prediente']}
                           label={!index && "Pending"}
                         >
-                          <label>${(_form.getFieldsValue()?.reversations && (_form.getFieldsValue()?.reversations[index]?.prediente || 0)).toFixed(2)}</label>
+                          <label>${(_form.getFieldsValue()?.reversations && (_form.getFieldsValue()?.reversations[index]?.prediente || 0))}</label>
                         </Form.Item>
                       </>
                     ))}
