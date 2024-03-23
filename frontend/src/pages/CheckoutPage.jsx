@@ -266,7 +266,7 @@ const CheckoutPage = () => {
                                 })}
                             </div>
                             <div style={{ border: "1px solid #2D2D2D26" }}></div>
-                            <div className="h-50 my-7">
+                            <div className="my-7" style={{ height: '500px' }}>
                                 <div className="d-flex my-7">
                                     <div className="col-6 mx-5">
                                         <h6 className="text-success">Sub Total <Checkbox onChange={(e) => addTaxPercent(e.target.checked)}>Tax</Checkbox></h6>
