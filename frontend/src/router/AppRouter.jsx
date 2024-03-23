@@ -6,7 +6,7 @@ import PublicRoute from './PublicRoute';
 import PageLoader from '@/components/PageLoader';
 import { routesConfig } from './RoutesConfig';
 import history from '@/utils/history';
-
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 const Logout = lazy(() => import(/*webpackChunkName:'LogoutPage'*/ '@/pages/Logout'));
 const NotFound = lazy(() => import(/*webpackChunkName:'NotFoundPage'*/ '@/pages/NotFound'));
 

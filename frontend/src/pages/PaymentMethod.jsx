@@ -1,12 +1,18 @@
 import { DashboardLayout, } from '@/layout';
 import { DeleteOutlined, EditOutlined, SearchOutlined, } from '@ant-design/icons';
 import { Button, Col, Form, Input, Layout, Modal, PageHeader, Popconfirm, Row, Table, Typography } from 'antd';
+import { convertFromRaw, EditorState } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { crud } from '@/redux/crud/actions';
 import { selectListItems } from '@/redux/crud/selectors';
 import { useForm } from 'antd/lib/form/Form';
 import { dateFormat } from './common';
+import TextArea from 'antd/lib/input/TextArea';
+import { Editor } from "react-draft-wysiwyg";
+import { Content } from 'antd/lib/layout/layout';
 
 
 const PaymentMethod = () => {
@@ -61,6 +67,14 @@ const PaymentMethod = () => {
             title: 'Method Name',
             dataIndex: 'method_name',
             width: '15%',
+        },
+        {
+            title: 'Method Descritpion',
+            dataIndex: 'method_description',
+            width: '15%',
+            render: (text) => {
+                return <div dangerouslySetInnerHTML={{ __html: text }} />
+            }
         },
         {
             title: 'Created',
@@ -121,7 +135,19 @@ const PaymentMethod = () => {
     }, [
         items, pagination
     ])
+
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [contentState, setContentState] = useState(null);
+    const handleContentStateChange = (contentState) => {
+        setContentState(draftToHtml(contentState));
+    };
+
+    const handleEditorStateChange = (editorState) => {
+        setEditorState(editorState);
+    };
     const onFinish = (values) => {
+
+        values.method_description = contentState
         if (isUpdate && currentId) {
             const id = currentId;
             dispatch(crud.update({ entity, id, jsonData: values }));
@@ -132,6 +158,8 @@ const PaymentMethod = () => {
         dispatch(crud.resetState());
         dispatch(crud.list({ entity }));
         handleCancel()
+        setEditorState('');
+        setContentState('')
     };
     const formRef = useRef(null);
     const onFinishFailed = (errorInfo) => {
@@ -159,7 +187,7 @@ const PaymentMethod = () => {
                 }
             ></PageHeader>
             <Layout style={{ minHeight: '100vh' }}>
-                <Modal title="Create Form" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
+                <Modal width="800px" title="Create Form" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
                     <>
                         <Form
                             form={createForm}
@@ -192,13 +220,16 @@ const PaymentMethod = () => {
                             <Form.Item
                                 name="method_description"
                                 label="Method Description"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
                             >
-                                <Input />
+                                <Editor
+                                    editorState={editorState}
+                                    toolbarClassName="editor-toolbar"
+                                    wrapperClassName="editor-wrapper"
+                                    editorClassName="editor"
+                                    onEditorStateChange={handleEditorStateChange}
+                                    onContentStateChange={handleContentStateChange}
+                                    spellCheck
+                                />;
                             </Form.Item>
                             <Form.Item
                                 wrapperCol={{
@@ -251,7 +282,7 @@ const PaymentMethod = () => {
 
                 </Layout>
             </Layout>
-        </DashboardLayout>
+        </DashboardLayout >
     );
 };
 export default PaymentMethod;
