@@ -240,9 +240,9 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         const { reversations: reservations } = values;
         const reservationsWithParentId = reservations.map((obj) => {
             obj.parent_id = parentId;
+            obj.company_name = productType[0]?.product_type?.company_name?._id;
             obj.user_id = currentUserId;
             obj.is_preventa = obj.is_preventa || false;
-            obj.company_name = values?.company_name
             return obj
         });
         const formData = new FormData();
@@ -311,6 +311,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     ]);
     const [productCategories, setProductCategories] = useState([]);
     const [originProductCategories, setOriginProductCategories] = useState([]);
+    const [originProductTypes, setOriginProductTypes] = useState([]);
 
     const [newCategory, setNewCategory] = useState(``);
     const [isEditReserva, setIsEditReserva] = useState(false)
@@ -385,16 +386,16 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         // _editForm.setFieldsValue({ product_name: productList[0]?._id })
     }
     const [productType, setProductType] = useState('')
-    const [originProductTypes, setOriginProductTypes] = useState('')
     const handleCompanyType = async (value) => {
-        const { result } = await request.list({ entity: `productTypes` });
+        const { result } = await request.list({ entity: `productCategories` });
         setOriginProductTypes(result)
 
         const productTypes = result.filter((obj) => {
-            if (obj?.company_name?._id === value) {
+            if (obj?.product_type?._id === value) {
                 return obj;
             }
         })
+        console.log(productTypes)
         setProductType(productTypes);
     }
     const handlePriceChange = (newValue, index) => {
@@ -571,7 +572,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                         },
                                     ]}
                                 >
-                                    <SelectAsync entity={`companyList`} displayLabels={[`company_name`]} onChange={handleCompanyType} />
+                                    <div className="ant-input ant-input-disabled" style={{ minHeight: '30px' }} > {productType[0]?.product_type?.company_name?.company_name}</div>
                                 </Form.Item>
                             </Col>
 
@@ -599,17 +600,8 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                                             },
                                                         ]}
                                                     >
-                                                        <Select onChange={handleProductType}>
-                                                            {[...productType].map((optionField) => (
-                                                                <Select.Option
-                                                                    key={optionField[`_id`]}
-                                                                    value={optionField[`_id`]}
-                                                                >
-                                                                    {optionField[`product_name`]}
-                                                                </Select.Option>
-                                                            ))}
-                                                            {/* <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleProductType} /> */}
-                                                        </Select>
+
+                                                        <SelectAsync entity={'productTypes'} displayLabels={['product_name']} onChange={handleCompanyType} />
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={4}>
