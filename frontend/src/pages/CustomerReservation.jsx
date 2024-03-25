@@ -375,16 +375,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         getProductCategories();
         document.title = "CustomerDetails"
     }, []);
-    const handleProductType = (value) => {
-        const productList = originProductCategories.filter((obj) => {
-            if (obj?.product_type?._id === value) {
-                return obj;
-            }
-        })
-        console.log(productList, `productList`);
-        setProductCategories(productList);
-        // _editForm.setFieldsValue({ product_name: productList[0]?._id })
-    }
+
     const [productType, setProductType] = useState('')
     const handleCompanyType = async (value) => {
         const { result } = await request.list({ entity: `productTypes` });
@@ -396,6 +387,14 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
             }
         })
         setProductType(productTypes);
+
+        const productList = originProductCategories.filter((obj) => {
+            if (obj?.product_type?._id === value) {
+                return obj;
+            }
+        })
+        console.log(productList, `productList`);
+        setProductCategories(productList);
     }
     const handlePriceChange = (newValue, index) => {
         var formData = form.getFieldsValue();
