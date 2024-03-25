@@ -240,7 +240,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
         const { reversations: reservations } = values;
         const reservationsWithParentId = reservations.map((obj) => {
             obj.parent_id = parentId;
-            obj.company_name = productType[0]?.product_type?.company_name?._id;
+            obj.company_name = productType[0]?.company_name?._id;
             obj.user_id = currentUserId;
             obj.is_preventa = obj.is_preventa || false;
             return obj
@@ -387,15 +387,14 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
     }
     const [productType, setProductType] = useState('')
     const handleCompanyType = async (value) => {
-        const { result } = await request.list({ entity: `productCategories` });
-        setOriginProductTypes(result)
+        const { result } = await request.list({ entity: `productTypes` });
 
+        setOriginProductTypes(result)
         const productTypes = result.filter((obj) => {
-            if (obj?.product_type?._id === value) {
+            if (obj?._id === value) {
                 return obj;
             }
         })
-        console.log(productTypes)
         setProductType(productTypes);
     }
     const handlePriceChange = (newValue, index) => {
@@ -572,7 +571,7 @@ const CustomerReservation = ({ parentId: currentCustomerId, isClicked, onIsClick
                                         },
                                     ]}
                                 >
-                                    <div className="ant-input ant-input-disabled" style={{ minHeight: '30px' }} > {productType[0]?.product_type?.company_name?.company_name}</div>
+                                    <div className="ant-input ant-input-disabled" style={{ minHeight: '30px' }} > {productType[0]?.company_name?.company_name}</div>
                                 </Form.Item>
                             </Col>
 
